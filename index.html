@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Pas Photo (GitHub Pages)</title>
+    <title>AI Pas Photo (ChatGPT API)</title>
     <style>
         :root {
-            --primary: #0099ff;
-            --bg: #0f1115;
-            --card: #1c1f26;
-            --text: #ffffff;
-            --border: #2f333d;
+            --primary: #10a37f; /* ChatGPT Green */
+            --bg: #343541;
+            --card: #444654;
+            --text: #ececf1;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
@@ -26,25 +25,35 @@
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             background: var(--card);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 1px solid #565869;
         }
 
         h1 { text-align: center; color: var(--primary); margin-bottom: 10px; }
-        .subtitle { text-align: center; color: #888; margin-bottom: 30px; font-size: 0.9rem; }
+        .subtitle { text-align: center; color: #acacbe; margin-bottom: 2rem; font-size: 0.9rem; }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
         @media(max-width: 768px) { .grid { grid-template-columns: 1fr; } }
 
         .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #ccc; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #d9d9e3; font-size: 0.9rem; }
         
+        .worker-input {
+            width: 100%;
+            background: #202123;
+            border: 1px solid #565869;
+            color: var(--primary);
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+
         .upload-area {
-            border: 2px dashed var(--border);
+            border: 2px dashed #565869;
             border-radius: 8px;
             padding: 30px;
             text-align: center;
@@ -54,30 +63,30 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #14171a;
+            background: #202123;
             overflow: hidden;
         }
         .upload-area:hover { border-color: var(--primary); }
         .upload-area input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         .preview-img { max-width: 100%; max-height: 100%; display: none; object-fit: contain; }
-        .upload-text { pointer-events: none; color: #666; }
+        .upload-text { pointer-events: none; color: #8e8ea0; }
 
         .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .option-btn {
-            background: #252830;
-            border: 1px solid var(--border);
-            color: #ccc;
-            padding: 12px;
+            background: #343541;
+            border: 1px solid #565869;
+            color: #ececf1;
+            padding: 10px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: 0.2s;
         }
-        .option-btn:hover { background: #2f333d; }
-        .option-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .option-btn:hover { background: #40414f; }
+        .option-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
         select {
-            width: 100%; padding: 10px; background: #252830; color: white; border: 1px solid var(--border); border-radius: 6px;
+            width: 100%; padding: 10px; background: #343541; color: white; border: 1px solid #565869; border-radius: 6px;
         }
 
         .btn-gen {
@@ -85,45 +94,44 @@
             color: white;
             border: none;
             padding: 15px;
-            border-radius: 8px;
-            font-size: 1.1rem;
+            border-radius: 6px;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
             margin-top: 20px;
             transition: 0.2s;
         }
-        .btn-gen:hover { background: #007acc; }
-        .btn-gen:disabled { background: #333; cursor: not-allowed; }
+        .btn-gen:hover { opacity: 0.9; }
+        .btn-gen:disabled { background: #565869; cursor: not-allowed; }
 
         .status-box {
-            background: #111;
+            background: #202123;
             padding: 10px;
             border-radius: 6px;
             font-family: monospace;
             font-size: 0.8rem;
-            color: #00ff9d;
+            color: #8e8ea0;
             margin-top: 10px;
             min-height: 40px;
-            border: 1px solid #333;
-            word-break: break-all;
+            border: 1px solid #565869;
         }
 
         .result-area {
-            background: black;
+            background: #202123;
             border-radius: 8px;
             min-height: 400px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #333;
+            border: 1px solid #565869;
             position: relative;
         }
         .result-img { width: 100%; height: auto; display: none; object-fit: contain; }
         
         .loader {
             width: 40px; height: 40px;
-            border: 4px solid #333;
+            border: 4px solid #343541;
             border-top: 4px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -131,32 +139,37 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .note { font-size: 0.75rem; color: #666; margin-top: 5px; }
-        .badge { background: #2a2a2a; color: #0099ff; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; border: 1px solid #444; }
+        .note { font-size: 0.75rem; color: #8e8ea0; margin-top: 5px; }
+        .badge { background: #343541; color: var(--primary); padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
 
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>AI Pas Photo <span class="badge">GitHub Pages Ready</span></h1>
-    <div class="subtitle">Upload Foto -> AI Generate (Tanpa API Key / Tanpa Server)</div>
+    <h1>AI Pas Photo <span class="badge">ChatGPT API</span></h1>
+    <div class="subtitle">Backend via Cloudflare Worker | Frontend via GitHub Pages</div>
 
     <div class="grid">
-        <!-- LEFT CONTROLS -->
+        <!-- LEFT -->
         <div>
             <div class="form-group">
-                <label>1. Upload Foto Wajah</label>
-                <div class="upload-area">
-                    <input type="file" id="imgInput" accept="image/jpeg, image/png">
-                    <div class="upload-text" id="uploadText">Klik untuk Upload Foto</div>
-                    <img id="preview" class="preview-img">
-                </div>
-                <div class="note">Format disarankan: JPG/PNG wajah (close up).</div>
+                <label>1. URL Cloudflare Worker</label>
+                <input type="text" id="workerUrl" class="worker-input" placeholder="https://nama-worker.workers.dev">
+                <div class="note">Masukkan URL Worker dari Langkah 1.</div>
             </div>
 
             <div class="form-group">
-                <label>2. Pilih Pakaian</label>
+                <label>2. Upload Foto Wajah</label>
+                <div class="upload-area">
+                    <input type="file" id="imgInput" accept="image/*">
+                    <div class="upload-text" id="uploadText">Klik untuk Upload Foto</div>
+                    <img id="preview" class="preview-img">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>3. Pilih Pakaian</label>
                 <div class="options">
                     <button class="option-btn active" onclick="setClothing('pria-jas')">Pria Jas & Dasi</button>
                     <button class="option-btn" onclick="setClothing('pria-kemeja')">Pria Kemeja Putih</button>
@@ -168,7 +181,7 @@
             </div>
 
             <div class="form-group">
-                <label>3. Warna Background</label>
+                <label>4. Warna Background</label>
                 <select id="bgColor">
                     <option value="red">Merah (Standard)</option>
                     <option value="blue">Biru (Standard)</option>
@@ -177,29 +190,25 @@
                 </select>
             </div>
 
-            <button class="btn-gen" id="genBtn" onclick="runImageToImage()">✨ GENERATE (Image-to-Image)</button>
+            <button class="btn-gen" id="genBtn" onclick="runGeneration()">✨ GENERATE (ChatGPT)</button>
             <div class="status-box" id="statusLog">Menunggu input...</div>
         </div>
 
-        <!-- RIGHT RESULT -->
+        <!-- RIGHT -->
         <div>
-            <label>Hasil AI (Pollinations)</label>
+            <label>Hasil DALL-E 3</label>
             <div class="result-area">
                 <div id="placeholder" style="color:#555">Hasil foto muncul di sini</div>
                 <div class="loader" id="loader"></div>
                 <img id="resultImg" class="result-img">
             </div>
-            <div class="note" style="margin-top:10px; text-align:center;">Proses mungkin butuh 5-15 detik.</div>
+            <div class="note" style="margin-top:10px; text-align:center;">Biaya sekitar $0.04 - $0.12 per gambar.</div>
         </div>
     </div>
 </div>
 
 <script>
     // --- CONFIG ---
-    // Menggunakan Pollinations AI (Tanpa Token, Mendukung CORS, Mendukung Image-to-Image via Base64)
-    // Model Flux Realism memberikan kualitas tinggi.
-    const MODEL_API = "https://image.pollinations.ai/prompt";
-    
     let state = {
         clothing: 'pria-jas',
         base64Img: null
@@ -220,7 +229,7 @@
         if(file){
             const reader = new FileReader();
             reader.onload = (evt) => {
-                state.base64Img = evt.target.result; // Data URI
+                state.base64Img = evt.target.result;
                 document.getElementById('preview').src = state.base64Img;
                 document.getElementById('preview').style.display = 'block';
                 document.getElementById('uploadText').style.display = 'none';
@@ -235,68 +244,55 @@
         event.target.classList.add('active');
     }
 
-    // --- CORE LOGIC: IMAGE-TO-IMAGE GENERATION ---
-    async function runImageToImage() {
+    // --- LOGIC: CALL CLOUDFLARE WORKER ---
+    async function runGeneration() {
+        const workerUrl = document.getElementById('workerUrl').value.trim();
         const status = document.getElementById('statusLog');
         const loader = document.getElementById('loader');
         const placeholder = document.getElementById('placeholder');
         const resultImg = document.getElementById('resultImg');
         const btn = document.getElementById('genBtn');
 
-        if (!state.base64Img) return alert("Upload foto wajah dulu.");
+        if (!workerUrl) return alert("Masukkan URL Cloudflare Worker Anda (Langkah 1).");
+        if (!state.base64Img) return alert("Upload foto dulu.");
 
         btn.disabled = true;
-        status.innerText = ">>> Menghubungi AI Pollinations...";
+        status.innerText = ">>> Mengirim ke Worker...";
         loader.style.display = 'block';
         placeholder.style.display = 'none';
         resultImg.style.display = 'none';
 
         try {
-            // 1. Construct Prompt
             const bgColor = document.getElementById('bgColor').value;
-            let bgPrompt = "solid bright red background";
-            if(bgColor === 'blue') bgPrompt = "solid bright blue background";
-            if(bgColor === 'grey') bgPrompt = "solid grey background";
-            if(bgColor === 'white') bgPrompt = "pure white background";
-
             const clothingDesc = clothingMap[state.clothing];
+
+            const response = await fetch(workerUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    imageBase64: state.base64Img,
+                    clothing: clothingDesc,
+                    bg: bgColor
+                    // API Key tidak perlu dikirim jika sudah di-set di Worker Variable
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.error || "Gagal menghubungi Worker");
+            }
+
+            const data = await response.json();
             
-            // Prompt khusus untuk Image-to-Image agar fokus mengganti pakaian
-            const prompt = `A professional passport photo, studio lighting, 4x6 ratio. ${clothingDesc}. Background: ${bgPrompt}. High quality, realistic.`;
+            if(data.error) throw new Error(data.error);
 
-            // 2. Build URL with Base64 Image Parameter
-            // Pollinations menerima parameter 'image' dengan URL atau Data URI
-            // Kita gunakan encodeURIComponent untuk memastikan format base64 aman di URL
-            const encodedPrompt = encodeURIComponent(prompt);
-            const encodedImage = encodeURIComponent(state.base64Img); 
+            // Handle DALL-E Response
+            const b64Json = data.data[0].b64_json;
             
-            // Random seed untuk variasi jika user klik ulang
-            const seed = Math.floor(Math.random() * 100000);
-            
-            // Construct Final URL
-            // Model flux-realism atau sdxl
-            const finalUrl = `${MODEL_API}/${encodedPrompt}?image=${encodedImage}&width=512&height=768&seed=${seed}&nologo=true&model=flux-realism`;
-
-            status.innerText = ">>> Sedang Render... (Waktu: 5-15 detik)";
-
-            // 3. Fetch Image
-            // Kita membuat elemen Image baru untuk preload
-            const tempImg = new Image();
-            
-            tempImg.onload = () => {
-                resultImg.src = finalUrl;
-                resultImg.style.display = 'block';
-                loader.style.display = 'none';
-                status.innerText = ">>> ✅ SELESAI!";
-                btn.disabled = false;
-            };
-
-            tempImg.onerror = () => {
-                throw new Error("Gagal memuat gambar. Coba lagi.");
-            };
-
-            // Memulai loading gambar
-            tempImg.src = finalUrl;
+            resultImg.src = `data:image/png;base64,${b64Json}`;
+            resultImg.style.display = 'block';
+            loader.style.display = 'none';
+            status.innerText = ">>> ✅ SELESAI!";
 
         } catch (error) {
             console.error(error);
@@ -304,6 +300,7 @@
             alert("Gagal: " + error.message);
             loader.style.display = 'none';
             placeholder.style.display = 'block';
+        } finally {
             btn.disabled = false;
         }
     }
