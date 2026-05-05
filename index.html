@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Pas Photo (Server Mode)</title>
+    <title>AI Pas Photo (GitHub Pages)</title>
     <style>
         :root {
             --primary: #0099ff;
@@ -43,17 +43,6 @@
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: #ccc; }
         
-        .token-input {
-            width: 100%;
-            background: #111;
-            border: 1px solid var(--border);
-            color: var(--primary);
-            padding: 12px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-weight: bold;
-        }
-
         .upload-area {
             border: 2px dashed var(--border);
             border-radius: 8px;
@@ -143,35 +132,31 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .note { font-size: 0.75rem; color: #666; margin-top: 5px; }
+        .badge { background: #2a2a2a; color: #0099ff; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; border: 1px solid #444; }
 
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>AI Pas Photo (Server Mode)</h1>
-    <div class="subtitle">Harap buka file ini via Live Server / HTTP Server agar berfungsi.</div>
+    <h1>AI Pas Photo <span class="badge">GitHub Pages Ready</span></h1>
+    <div class="subtitle">Upload Foto -> AI Generate (Tanpa API Key / Tanpa Server)</div>
 
     <div class="grid">
         <!-- LEFT CONTROLS -->
         <div>
             <div class="form-group">
-                <label>1. Token Hugging Face (Type: WRITE)</label>
-                <input type="password" id="hfToken" class="token-input" placeholder="Paste 'hf_...' (Write Token) disini">
-                <div class="note">Wajib Create Token 'Write' di Settings HuggingFace.</div>
-            </div>
-
-            <div class="form-group">
-                <label>2. Upload Foto Wajah</label>
+                <label>1. Upload Foto Wajah</label>
                 <div class="upload-area">
                     <input type="file" id="imgInput" accept="image/jpeg, image/png">
                     <div class="upload-text" id="uploadText">Klik untuk Upload Foto</div>
                     <img id="preview" class="preview-img">
                 </div>
+                <div class="note">Format disarankan: JPG/PNG wajah (close up).</div>
             </div>
 
             <div class="form-group">
-                <label>3. Pilih Pakaian</label>
+                <label>2. Pilih Pakaian</label>
                 <div class="options">
                     <button class="option-btn active" onclick="setClothing('pria-jas')">Pria Jas & Dasi</button>
                     <button class="option-btn" onclick="setClothing('pria-kemeja')">Pria Kemeja Putih</button>
@@ -183,7 +168,7 @@
             </div>
 
             <div class="form-group">
-                <label>4. Warna Background</label>
+                <label>3. Warna Background</label>
                 <select id="bgColor">
                     <option value="red">Merah (Standard)</option>
                     <option value="blue">Biru (Standard)</option>
@@ -192,28 +177,28 @@
                 </select>
             </div>
 
-            <button class="btn-gen" id="genBtn" onclick="runAutoProcess()">🚀 AUTO GENERATE</button>
+            <button class="btn-gen" id="genBtn" onclick="runImageToImage()">✨ GENERATE (Image-to-Image)</button>
             <div class="status-box" id="statusLog">Menunggu input...</div>
         </div>
 
         <!-- RIGHT RESULT -->
         <div>
-            <label>Hasil AI (SDXL Turbo)</label>
+            <label>Hasil AI (Pollinations)</label>
             <div class="result-area">
                 <div id="placeholder" style="color:#555">Hasil foto muncul di sini</div>
                 <div class="loader" id="loader"></div>
                 <img id="resultImg" class="result-img">
             </div>
-            <div class="note" style="margin-top:10px; text-align:center;">Proses membutuhkan 10-20 detik.</div>
+            <div class="note" style="margin-top:10px; text-align:center;">Proses mungkin butuh 5-15 detik.</div>
         </div>
     </div>
 </div>
 
 <script>
     // --- CONFIG ---
-    // KODE INI HANYA JALAN JIKA DIBUKA VIA SERVER (http://127.0.0.1...)
-    const MODEL_VISION = "Salesforce/blip-image-captioning-base";
-    const MODEL_IMAGE = "stabilityai/sdxl-turbo";
+    // Menggunakan Pollinations AI (Tanpa Token, Mendukung CORS, Mendukung Image-to-Image via Base64)
+    // Model Flux Realism memberikan kualitas tinggi.
+    const MODEL_API = "https://image.pollinations.ai/prompt";
     
     let state = {
         clothing: 'pria-jas',
@@ -235,7 +220,7 @@
         if(file){
             const reader = new FileReader();
             reader.onload = (evt) => {
-                state.base64Img = evt.target.result;
+                state.base64Img = evt.target.result; // Data URI
                 document.getElementById('preview').src = state.base64Img;
                 document.getElementById('preview').style.display = 'block';
                 document.getElementById('uploadText').style.display = 'none';
@@ -250,110 +235,75 @@
         event.target.classList.add('active');
     }
 
-    // --- CORE LOGIC: DIRECT API CONNECTION (NO PROXY) ---
-    async function runAutoProcess() {
-        const token = document.getElementById('hfToken').value.trim();
+    // --- CORE LOGIC: IMAGE-TO-IMAGE GENERATION ---
+    async function runImageToImage() {
         const status = document.getElementById('statusLog');
         const loader = document.getElementById('loader');
         const placeholder = document.getElementById('placeholder');
         const resultImg = document.getElementById('resultImg');
         const btn = document.getElementById('genBtn');
 
-        // 1. Validation
-        if (!token) return alert("Masukkan Token WRITE HuggingFace dulu.");
         if (!state.base64Img) return alert("Upload foto wajah dulu.");
 
-        // 2. UI Reset
         btn.disabled = true;
-        status.innerText = ">>> Menghubungi API Langsung...";
+        status.innerText = ">>> Menghubungi AI Pollinations...";
         loader.style.display = 'block';
         placeholder.style.display = 'none';
         resultImg.style.display = 'none';
 
         try {
-            // --- STEP 1: VISION AI ---
-            status.innerText = ">>> Analisa Wajah...";
-            
-            const urlVision = `https://api-inference.huggingface.co/models/${MODEL_VISION}`;
-            
-            const visionResp = await fetch(urlVision, {
-                method: "POST",
-                headers: { 
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ inputs: state.base64Img })
-            });
-
-            if (!visionResp.ok) {
-                const err = await visionResp.json();
-                if(visionResp.status === 401) throw new Error("Token Salah/Kadaluarsa.");
-                if(visionResp.status === 503) throw new Error("Model loading... Tunggu 10 detik.");
-                throw new Error(err.error || "Gagal Vision");
-            }
-
-            const visionData = await visionResp.json();
-            let faceDescription = "";
-            if(Array.isArray(visionData) && visionData[0]) {
-                faceDescription = visionData[0].generated_text;
-            } else {
-                faceDescription = visionData.generated_text || "a person"; 
-            }
-            
-            const cleanDesc = faceDescription.split("in")[0] || faceDescription;
-            
-            status.innerText = `>>> Terdeteksi: ${cleanDesc.substring(0, 30)}...`;
-
-            // --- STEP 2: IMAGE GENERATION ---
-            status.innerText = ">>> Generate Pakaian...";
-            
+            // 1. Construct Prompt
             const bgColor = document.getElementById('bgColor').value;
             let bgPrompt = "solid bright red background";
             if(bgColor === 'blue') bgPrompt = "solid bright blue background";
             if(bgColor === 'grey') bgPrompt = "solid grey background";
             if(bgColor === 'white') bgPrompt = "pure white background";
 
-            const prompt = `
-                A hyper-realistic 4x6 passport photo. Studio lighting, sharp focus on face.
-                Subject: ${cleanDesc}.
-                Outfit: ${clothingMap[state.clothing]}.
-                Background: ${bgPrompt}.
-                High quality, professional photography.
-            `;
+            const clothingDesc = clothingMap[state.clothing];
+            
+            // Prompt khusus untuk Image-to-Image agar fokus mengganti pakaian
+            const prompt = `A professional passport photo, studio lighting, 4x6 ratio. ${clothingDesc}. Background: ${bgPrompt}. High quality, realistic.`;
 
-            const urlImg = `https://api-inference.huggingface.co/models/${MODEL_IMAGE}`;
+            // 2. Build URL with Base64 Image Parameter
+            // Pollinations menerima parameter 'image' dengan URL atau Data URI
+            // Kita gunakan encodeURIComponent untuk memastikan format base64 aman di URL
+            const encodedPrompt = encodeURIComponent(prompt);
+            const encodedImage = encodeURIComponent(state.base64Img); 
+            
+            // Random seed untuk variasi jika user klik ulang
+            const seed = Math.floor(Math.random() * 100000);
+            
+            // Construct Final URL
+            // Model flux-realism atau sdxl
+            const finalUrl = `${MODEL_API}/${encodedPrompt}?image=${encodedImage}&width=512&height=768&seed=${seed}&nologo=true&model=flux-realism`;
 
-            const imgResp = await fetch(urlImg, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ inputs: prompt })
-            });
+            status.innerText = ">>> Sedang Render... (Waktu: 5-15 detik)";
 
-            if (!imgResp.ok) {
-                const err = await imgResp.json();
-                if(imgResp.status === 503) throw new Error("Model loading... Tunggu 10 detik.");
-                throw new Error(err.error || "Gagal Generate");
-            }
+            // 3. Fetch Image
+            // Kita membuat elemen Image baru untuk preload
+            const tempImg = new Image();
+            
+            tempImg.onload = () => {
+                resultImg.src = finalUrl;
+                resultImg.style.display = 'block';
+                loader.style.display = 'none';
+                status.innerText = ">>> ✅ SELESAI!";
+                btn.disabled = false;
+            };
 
-            const blob = await imgResp.blob();
-            const imageUrl = URL.createObjectURL(blob);
+            tempImg.onerror = () => {
+                throw new Error("Gagal memuat gambar. Coba lagi.");
+            };
 
-            // 3. Show Result
-            resultImg.src = imageUrl;
-            resultImg.style.display = 'block';
-            loader.style.display = 'none';
-            status.innerText = ">>> ✅ SELESAI!";
+            // Memulai loading gambar
+            tempImg.src = finalUrl;
 
         } catch (error) {
             console.error(error);
             status.innerText = ">>> ❌ ERROR: " + error.message;
-            alert("Gagal: " + error.message + "\n\nApakah Anda membuka file ini via Server? (bukan file://)");
+            alert("Gagal: " + error.message);
             loader.style.display = 'none';
             placeholder.style.display = 'block';
-        } finally {
             btn.disabled = false;
         }
     }
