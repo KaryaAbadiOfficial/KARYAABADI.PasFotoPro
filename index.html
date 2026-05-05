@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Pas Foto Otomatis (Upload & Generate)</title>
+    <title>AI Pas Photo (Server Mode)</title>
     <style>
         :root {
-            --primary: #0099ff; /* Biru Tech */
+            --primary: #0099ff;
             --bg: #0f1115;
             --card: #1c1f26;
             --text: #ffffff;
@@ -37,11 +37,9 @@
         h1 { text-align: center; color: var(--primary); margin-bottom: 10px; }
         .subtitle { text-align: center; color: #888; margin-bottom: 30px; font-size: 0.9rem; }
 
-        /* Grid Layout */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
         @media(max-width: 768px) { .grid { grid-template-columns: 1fr; } }
 
-        /* Inputs */
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: #ccc; }
         
@@ -56,7 +54,6 @@
             font-weight: bold;
         }
 
-        /* Upload Area */
         .upload-area {
             border: 2px dashed var(--border);
             border-radius: 8px;
@@ -76,7 +73,6 @@
         .preview-img { max-width: 100%; max-height: 100%; display: none; object-fit: contain; }
         .upload-text { pointer-events: none; color: #666; }
 
-        /* Options */
         .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .option-btn {
             background: #252830;
@@ -95,7 +91,6 @@
             width: 100%; padding: 10px; background: #252830; color: white; border: 1px solid var(--border); border-radius: 6px;
         }
 
-        /* Action Button */
         .btn-gen {
             background: var(--primary);
             color: white;
@@ -112,20 +107,19 @@
         .btn-gen:hover { background: #007acc; }
         .btn-gen:disabled { background: #333; cursor: not-allowed; }
 
-        /* Status Log */
         .status-box {
             background: #111;
             padding: 10px;
             border-radius: 6px;
             font-family: monospace;
             font-size: 0.8rem;
-            color: #00ff9d; /* Terminal Green */
+            color: #00ff9d;
             margin-top: 10px;
             min-height: 40px;
             border: 1px solid #333;
+            word-break: break-all;
         }
 
-        /* Result */
         .result-area {
             background: black;
             border-radius: 8px;
@@ -155,30 +149,27 @@
 <body>
 
 <div class="container">
-    <h1>AI Pas Photo (Auto-Fit)</h1>
-    <div class="subtitle">Upload Foto -> AI Analisa Wajah Otomatis -> Generate Pakaian</div>
+    <h1>AI Pas Photo (Server Mode)</h1>
+    <div class="subtitle">Harap buka file ini via Live Server / HTTP Server agar berfungsi.</div>
 
     <div class="grid">
         <!-- LEFT CONTROLS -->
         <div>
-            <!-- 1. Token -->
             <div class="form-group">
                 <label>1. Token Hugging Face (Type: WRITE)</label>
                 <input type="password" id="hfToken" class="token-input" placeholder="Paste 'hf_...' (Write Token) disini">
                 <div class="note">Wajib Create Token 'Write' di Settings HuggingFace.</div>
             </div>
 
-            <!-- 2. Upload -->
             <div class="form-group">
                 <label>2. Upload Foto Wajah</label>
                 <div class="upload-area">
-                    <input type="file" id="imgInput" accept="image/*">
+                    <input type="file" id="imgInput" accept="image/jpeg, image/png">
                     <div class="upload-text" id="uploadText">Klik untuk Upload Foto</div>
                     <img id="preview" class="preview-img">
                 </div>
             </div>
 
-            <!-- 3. Pakaian -->
             <div class="form-group">
                 <label>3. Pilih Pakaian</label>
                 <div class="options">
@@ -191,7 +182,6 @@
                 </div>
             </div>
 
-            <!-- 4. Background -->
             <div class="form-group">
                 <label>4. Warna Background</label>
                 <select id="bgColor">
@@ -202,7 +192,6 @@
                 </select>
             </div>
 
-            <!-- BUTTON & LOG -->
             <button class="btn-gen" id="genBtn" onclick="runAutoProcess()">🚀 AUTO GENERATE</button>
             <div class="status-box" id="statusLog">Menunggu input...</div>
         </div>
@@ -222,8 +211,9 @@
 
 <script>
     // --- CONFIG ---
-    const MODEL_VISION = "Salesforce/blip-image-captioning-base"; // Model baca foto -> teks
-    const MODEL_IMAGE = "stabilityai/sdxl-turbo"; // Model bikin gambar
+    // KODE INI HANYA JALAN JIKA DIBUKA VIA SERVER (http://127.0.0.1...)
+    const MODEL_VISION = "Salesforce/blip-image-captioning-base";
+    const MODEL_IMAGE = "stabilityai/sdxl-turbo";
     
     let state = {
         clothing: 'pria-jas',
@@ -260,7 +250,7 @@
         event.target.classList.add('active');
     }
 
-    // --- CORE LOGIC: 2-STEP AI ---
+    // --- CORE LOGIC: DIRECT API CONNECTION (NO PROXY) ---
     async function runAutoProcess() {
         const token = document.getElementById('hfToken').value.trim();
         const status = document.getElementById('statusLog');
@@ -275,16 +265,18 @@
 
         // 2. UI Reset
         btn.disabled = true;
-        status.innerText = ">>> Menyiapkan Token...";
+        status.innerText = ">>> Menghubungi API Langsung...";
         loader.style.display = 'block';
         placeholder.style.display = 'none';
         resultImg.style.display = 'none';
 
         try {
-            // --- STEP 1: VISION AI (Baca Wajah) ---
-            status.innerText = ">>> Langkah 1: Menganalisa wajah dari foto...";
+            // --- STEP 1: VISION AI ---
+            status.innerText = ">>> Analisa Wajah...";
             
-            const visionResp = await fetch(`https://api-inference.huggingface.co/models/${MODEL_VISION}`, {
+            const urlVision = `https://api-inference.huggingface.co/models/${MODEL_VISION}`;
+            
+            const visionResp = await fetch(urlVision, {
                 method: "POST",
                 headers: { 
                     "Authorization": `Bearer ${token}`,
@@ -295,22 +287,25 @@
 
             if (!visionResp.ok) {
                 const err = await visionResp.json();
-                throw new Error("Vision Error: " + (err.error || "Cek Token WRITE Anda"));
+                if(visionResp.status === 401) throw new Error("Token Salah/Kadaluarsa.");
+                if(visionResp.status === 503) throw new Error("Model loading... Tunggu 10 detik.");
+                throw new Error(err.error || "Gagal Vision");
             }
 
             const visionData = await visionResp.json();
-            // BLIP returns array [ { generated_text: "..." } ]
-            let faceDescription = visionData[0].generated_text;
-            console.log("AI Melihat:", faceDescription);
+            let faceDescription = "";
+            if(Array.isArray(visionData) && visionData[0]) {
+                faceDescription = visionData[0].generated_text;
+            } else {
+                faceDescription = visionData.generated_text || "a person"; 
+            }
             
-            // Bersihkan prompt kalau ada kata-kata yang tidak perlu
-            // BLIP mungkin bilang "a man in a t shirt". Kita ambil subjeknya saja.
-            const cleanDesc = faceDescription.split("in")[0] || faceDescription; 
+            const cleanDesc = faceDescription.split("in")[0] || faceDescription;
             
-            status.innerText = `>>> Terdeteksi: ${faceDescription.substring(0, 30)}...`;
+            status.innerText = `>>> Terdeteksi: ${cleanDesc.substring(0, 30)}...`;
 
-            // --- STEP 2: IMAGE GENERATION (Ganti Baju) ---
-            status.innerText = ">>> Langkah 2: Mengganti pakaian & render...";
+            // --- STEP 2: IMAGE GENERATION ---
+            status.innerText = ">>> Generate Pakaian...";
             
             const bgColor = document.getElementById('bgColor').value;
             let bgPrompt = "solid bright red background";
@@ -323,10 +318,12 @@
                 Subject: ${cleanDesc}.
                 Outfit: ${clothingMap[state.clothing]}.
                 Background: ${bgPrompt}.
-                High quality, professional photography, detailed skin texture, remove bad lighting.
+                High quality, professional photography.
             `;
 
-            const imgResp = await fetch(`https://api-inference.huggingface.co/models/${MODEL_IMAGE}`, {
+            const urlImg = `https://api-inference.huggingface.co/models/${MODEL_IMAGE}`;
+
+            const imgResp = await fetch(urlImg, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -336,10 +333,9 @@
             });
 
             if (!imgResp.ok) {
-                // Handle model warming up
-                if(imgResp.status === 503) throw new Error("Model AI sedang loading. Tunggu 10 detik lalu coba lagi.");
                 const err = await imgResp.json();
-                throw new Error("Image Error: " + (err.error || "Quota habis atau Token Salah"));
+                if(imgResp.status === 503) throw new Error("Model loading... Tunggu 10 detik.");
+                throw new Error(err.error || "Gagal Generate");
             }
 
             const blob = await imgResp.blob();
@@ -354,7 +350,7 @@
         } catch (error) {
             console.error(error);
             status.innerText = ">>> ❌ ERROR: " + error.message;
-            alert("Gagal: " + error.message);
+            alert("Gagal: " + error.message + "\n\nApakah Anda membuka file ini via Server? (bukan file://)");
             loader.style.display = 'none';
             placeholder.style.display = 'block';
         } finally {
