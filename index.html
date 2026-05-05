@@ -3,305 +3,424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Pas Photo (ChatGPT API)</title>
+    <title>AI Pas Foto Generator (Real API)</title>
     <style>
         :root {
-            --primary: #10a37f; /* ChatGPT Green */
-            --bg: #343541;
-            --card: #444654;
-            --text: #ececf1;
+            --primary: #0056b3;
+            --secondary: #6c757d;
+            --bg-color: #f8f9fa;
+            --border-radius: 8px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-
         body {
-            background: var(--bg);
-            color: var(--text);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 0;
             display: flex;
-            justify-content: center;
-            padding: 20px;
+            flex-direction: column;
             min-height: 100vh;
         }
 
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            background: var(--card);
-            border-radius: 12px;
+        header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 { margin: 0; font-size: 1.4rem; color: var(--primary); }
+        .badge { background: #e9ecef; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; }
+
+        main {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
             padding: 2rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border: 1px solid #565869;
-        }
-
-        h1 { text-align: center; color: var(--primary); margin-bottom: 10px; }
-        .subtitle { text-align: center; color: #acacbe; margin-bottom: 2rem; font-size: 0.9rem; }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        @media(max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #d9d9e3; font-size: 0.9rem; }
-        
-        .worker-input {
+            max-width: 1400px;
+            margin: 0 auto;
             width: 100%;
-            background: #202123;
-            border: 1px solid #565869;
-            color: var(--primary);
-            padding: 12px;
-            border-radius: 6px;
-            font-family: monospace;
         }
 
-        .upload-area {
-            border: 2px dashed #565869;
-            border-radius: 8px;
-            padding: 30px;
+        @media (max-width: 900px) {
+            main { grid-template-columns: 1fr; }
+        }
+
+        /* Sidebar Controls */
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        
+        input[type="text"], input[type="password"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .upload-box {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 20px;
             text-align: center;
             cursor: pointer;
-            position: relative;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #202123;
-            overflow: hidden;
+            background: #fafafa;
+            transition: 0.3s;
         }
-        .upload-area:hover { border-color: var(--primary); }
-        .upload-area input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-        .preview-img { max-width: 100%; max-height: 100%; display: none; object-fit: contain; }
-        .upload-text { pointer-events: none; color: #8e8ea0; }
-
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .option-btn {
-            background: #343541;
-            border: 1px solid #565869;
-            color: #ececf1;
-            padding: 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: 0.2s;
+        .upload-box:hover { border-color: var(--primary); background: #eef5fc; }
+        
+        .color-picker { display: flex; gap: 10px; margin-top: 5px; }
+        .color-option {
+            width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+            border: 2px solid #ddd;
         }
-        .option-btn:hover { background: #40414f; }
-        .option-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .color-option.selected { border-color: #333; transform: scale(1.1); }
 
-        select {
-            width: 100%; padding: 10px; background: #343541; color: white; border: 1px solid #565869; border-radius: 6px;
-        }
-
-        .btn-gen {
+        .btn-generate {
+            width: 100%;
+            padding: 12px;
             background: var(--primary);
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 6px;
-            font-size: 1rem;
+            border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-generate:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Result Area */
+        .preview-area {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .canvas-wrapper {
             width: 100%;
-            margin-top: 20px;
-            transition: 0.2s;
-        }
-        .btn-gen:hover { opacity: 0.9; }
-        .btn-gen:disabled { background: #565869; cursor: not-allowed; }
-
-        .status-box {
-            background: #202123;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.8rem;
-            color: #8e8ea0;
-            margin-top: 10px;
-            min-height: 40px;
-            border: 1px solid #565869;
-        }
-
-        .result-area {
-            background: #202123;
-            border-radius: 8px;
-            min-height: 400px;
+            max-width: 500px;
+            aspect-ratio: 5/7;
+            background: #eee;
+            border: 1px solid #ddd;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #565869;
+            overflow: hidden;
+            margin-bottom: 1rem;
             position: relative;
         }
-        .result-img { width: 100%; height: auto; display: none; object-fit: contain; }
-        
-        .loader {
-            width: 40px; height: 40px;
-            border: 4px solid #343541;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+
+        img#resultImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: none;
         }
+
+        .placeholder-text { color: #888; text-align: center; padding: 20px; }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            display: none;
+            position: absolute;
+        }
+
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .note { font-size: 0.75rem; color: #8e8ea0; margin-top: 5px; }
-        .badge { background: #343541; color: var(--primary); padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+        .log-console {
+            width: 100%;
+            background: #222;
+            color: #0f0;
+            font-family: monospace;
+            font-size: 0.8rem;
+            padding: 10px;
+            border-radius: 4px;
+            height: 150px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
 
+        .btn-download {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: none; /* Hidden until result ready */
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>AI Pas Photo <span class="badge">ChatGPT API</span></h1>
-    <div class="subtitle">Backend via Cloudflare Worker | Frontend via GitHub Pages</div>
+<header>
+    <h1>AI Pas Foto Generator <span style="font-size:0.6em; color:#666; font-weight:normal;">(Powered by SDXL Inpainting)</span></h1>
+    <span class="badge">V 2.0 Real API</span>
+</header>
 
-    <div class="grid">
-        <!-- LEFT -->
-        <div>
-            <div class="form-group">
-                <label>1. URL Cloudflare Worker</label>
-                <input type="text" id="workerUrl" class="worker-input" placeholder="https://nama-worker.workers.dev">
-                <div class="note">Masukkan URL Worker dari Langkah 1.</div>
-            </div>
-
-            <div class="form-group">
-                <label>2. Upload Foto Wajah</label>
-                <div class="upload-area">
-                    <input type="file" id="imgInput" accept="image/*">
-                    <div class="upload-text" id="uploadText">Klik untuk Upload Foto</div>
-                    <img id="preview" class="preview-img">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>3. Pilih Pakaian</label>
-                <div class="options">
-                    <button class="option-btn active" onclick="setClothing('pria-jas')">Pria Jas & Dasi</button>
-                    <button class="option-btn" onclick="setClothing('pria-kemeja')">Pria Kemeja Putih</button>
-                    <button class="option-btn" onclick="setClothing('wanita-jas')">Wanita Jas & Dasi</button>
-                    <button class="option-btn" onclick="setClothing('wanita-kemeja')">Wanita Kemeja Putih</button>
-                    <button class="option-btn" onclick="setClothing('wanita-hijab-jas')">Hijab & Jas</button>
-                    <button class="option-btn" onclick="setClothing('wanita-hijab-kemeja')">Hijab & Kemeja</button>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>4. Warna Background</label>
-                <select id="bgColor">
-                    <option value="red">Merah (Standard)</option>
-                    <option value="blue">Biru (Standard)</option>
-                    <option value="grey">Abu-abu</option>
-                    <option value="white">Putih</option>
-                </select>
-            </div>
-
-            <button class="btn-gen" id="genBtn" onclick="runGeneration()">✨ GENERATE (ChatGPT)</button>
-            <div class="status-box" id="statusLog">Menunggu input...</div>
+<main>
+    <!-- Sidebar Input -->
+    <div class="sidebar">
+        <div class="form-group">
+            <label for="apiKey">Hugging Face API Token <span style="color:red">*</span></label>
+            <input type="password" id="apiKey" placeholder="Paste Token Anda (hf_...)">
+            <small style="color:#666; font-size:0.75rem;">Dapatkan gratis di huggingface.co/settings/tokens</small>
         </div>
 
-        <!-- RIGHT -->
-        <div>
-            <label>Hasil DALL-E 3</label>
-            <div class="result-area">
-                <div id="placeholder" style="color:#555">Hasil foto muncul di sini</div>
-                <div class="loader" id="loader"></div>
-                <img id="resultImg" class="result-img">
+        <div class="form-group">
+            <label>1. Upload Foto</label>
+            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>Klik untuk pilih foto</p>
+                <small id="fileName" style="display:block; margin-top:5px; color:var(--primary);"></small>
             </div>
-            <div class="note" style="margin-top:10px; text-align:center;">Biaya sekitar $0.04 - $0.12 per gambar.</div>
+        </div>
+
+        <div class="form-group">
+            <label>2. Pilih Pakaian</label>
+            <select id="clothingSelect">
+                <option value="Kemeja putih polos pria">Kemeja Putih Polos (Pria)</option>
+                <option value="Kemeja putih polos wanita">Kemeja Putih Polos (Wanita)</option>
+                <option value="Kemeja putih polos wanita berhijab">Kemeja Putih Polos (Wanita + Hijab)</option>
+                <option value="Jas hitam formal dengan dasi hitam pria">Jas dengan Dasi Hitam (Pria)</option>
+                <option value="Jas hitam formal dengan dasi hitam wanita">Jas dengan Dasi Hitam (Wanita)</option>
+                <option value="Jas hitam formal dengan dasi hitam wanita berhijab">Jas dengan Dasi Hitam (Wanita + Hijab)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>3. Background</label>
+            <div class="color-picker">
+                <div class="color-option selected" style="background:#db1514;" onclick="selectColor('#db1514', this)"></div>
+                <div class="color-option" style="background:#0b00a3;" onclick="selectColor('#0b00a3', this)"></div>
+                <div class="color-option" style="background:#ffffff; border:1px solid #ccc;" onclick="selectColor('#ffffff', this)"></div>
+            </div>
+        </div>
+
+        <button class="btn-generate" id="generateBtn" onclick="generateImage()">
+            <span>✨ Generate Real AI</span>
+        </button>
+    </div>
+
+    <!-- Preview Output -->
+    <div class="preview-area">
+        <label>Hasil Generasi (AI)</label>
+        <div class="canvas-wrapper">
+            <div class="placeholder-text">Hasil foto akan muncul di sini...</div>
+            <div class="loader" id="loader"></div>
+            <img id="resultImage" alt="Hasil AI">
+        </div>
+        <a id="downloadLink" class="btn-download" download="pas-foto-ai.png">⬇️ Download High Res</a>
+
+        <div class="log-console" id="consoleLog">
+            > System Ready.<br>
+            > Menunggu input user...
         </div>
     </div>
-</div>
+</main>
 
 <script>
-    // --- CONFIG ---
-    let state = {
-        clothing: 'pria-jas',
-        base64Img: null
-    };
+    // State Variables
+    let currentFile = null;
+    let selectedBg = '#db1514';
+    const modelId = "diffusers/stable-diffusion-xl-1.0-inpainting"; // Model Inpainting terbaik di HF Free API
+    
+    // DOM Elements
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('fileName');
+    const apiKeyInput = document.getElementById('apiKey');
+    const generateBtn = document.getElementById('generateBtn');
+    const consoleLog = document.getElementById('consoleLog');
+    const loader = document.getElementById('loader');
+    const resultImage = document.getElementById('resultImage');
+    const placeholder = document.querySelector('.placeholder-text');
+    const downloadLink = document.getElementById('downloadLink');
 
-    const clothingMap = {
-        'pria-jas': 'wearing a professional black suit and black tie',
-        'pria-kemeja': 'wearing a clean white formal shirt',
-        'wanita-jas': 'wearing a professional black blazer and tie',
-        'wanita-kemeja': 'wearing a clean white formal blouse',
-        'wanita-hijab-jas': 'wearing a professional black blazer, black tie, and a black or grey hijab',
-        'wanita-hijab-kemeja': 'wearing a clean white blouse and a beige or grey hijab'
-    };
+    // Logger Helper
+    function log(msg) {
+        consoleLog.innerHTML += `> ${msg}<br>`;
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+    }
 
-    // --- EVENTS ---
-    document.getElementById('imgInput').addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if(file){
+    // Handle File Upload
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+            currentFile = e.target.files[0];
+            fileNameDisplay.textContent = currentFile.name;
+            log(`Foto dimuat: ${currentFile.name} (${(currentFile.size/1024).toFixed(1)} KB)`);
+            
+            // Show preview in main area temporarily (original)
             const reader = new FileReader();
-            reader.onload = (evt) => {
-                state.base64Img = evt.target.result;
-                document.getElementById('preview').src = state.base64Img;
-                document.getElementById('preview').style.display = 'block';
-                document.getElementById('uploadText').style.display = 'none';
-            };
-            reader.readAsDataURL(file);
+            reader.onload = function(e) {
+                resultImage.src = e.target.result;
+                resultImage.style.display = 'block';
+                placeholder.style.display = 'none';
+                downloadLink.style.display = 'none';
+            }
+            reader.readAsDataURL(currentFile);
         }
     });
 
-    function setClothing(type) {
-        state.clothing = type;
-        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
+    // Color Selection
+    function selectColor(color, element) {
+        selectedBg = color;
+        document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+        log(`Background diubah ke: ${color}`);
     }
 
-    // --- LOGIC: CALL CLOUDFLARE WORKER ---
-    async function runGeneration() {
-        const workerUrl = document.getElementById('workerUrl').value.trim();
-        const status = document.getElementById('statusLog');
-        const loader = document.getElementById('loader');
-        const placeholder = document.getElementById('placeholder');
-        const resultImg = document.getElementById('resultImg');
-        const btn = document.getElementById('genBtn');
+    // Generate Mask Image (Canvas Manipulation)
+    // Fungsi ini membuat "Mask" (Area hitam=biarkan, Putih=ubah) agar wajah tidak rusak
+    async function createMask(file) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set ukuran mask sama dengan gambar asli
+                canvas.width = img.width;
+                canvas.height = img.height;
 
-        if (!workerUrl) return alert("Masukkan URL Cloudflare Worker Anda (Langkah 1).");
-        if (!state.base64Img) return alert("Upload foto dulu.");
+                // 1. Isi seluruh dengan PUTIH (Artinya: Ganti SEMUANYA)
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        btn.disabled = true;
-        status.innerText = ">>> Mengirim ke Worker...";
+                // 2. Buat area HITAM di atas (Wajah) supaya TIDAK diganti
+                // Asumsi pas foto: wajah ada di 40% bagian atas
+                ctx.fillStyle = '#000000';
+                
+                // Buat bentuk oval untuk melindungi wajah
+                const centerX = canvas.width / 2;
+                const topY = canvas.height * 0.05; // Mulai dari sangat atas
+                const radiusX = canvas.width * 0.35;
+                const radiusY = canvas.height * 0.35;
+
+                ctx.beginPath();
+                ctx.ellipse(centerX, topY + radiusY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+                ctx.fill();
+
+                // Resolve sebagai Blob
+                canvas.toBlob((blob) => {
+                    resolve(blob);
+                }, 'image/png');
+            };
+            img.src = URL.createObjectURL(file);
+        });
+    }
+
+    // Main Generation Function
+    async function generateImage() {
+        const apiKey = apiKeyInput.value.trim();
+        const clothing = document.getElementById('clothingSelect').value;
+
+        if (!apiKey) {
+            alert('Mohon masukkan Hugging Face API Token Anda.');
+            return;
+        }
+        if (!currentFile) {
+            alert('Mohon upload foto terlebih dahulu.');
+            return;
+        }
+
+        // UI Updates
+        generateBtn.disabled = true;
+        generateBtn.innerHTML = '<span>⏳ Memproses...</span>';
         loader.style.display = 'block';
+        resultImage.style.display = 'none';
         placeholder.style.display = 'none';
-        resultImg.style.display = 'none';
-
+        downloadLink.style.display = 'none';
+        
         try {
-            const bgColor = document.getElementById('bgColor').value;
-            const clothingDesc = clothingMap[state.clothing];
+            log('Membuat mask wajah (Face Protection)...');
+            const maskBlob = await createMask(currentFile);
 
-            const response = await fetch(workerUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    imageBase64: state.base64Img,
-                    clothing: clothingDesc,
-                    bg: bgColor
-                    // API Key tidak perlu dikirim jika sudah di-set di Worker Variable
-                })
-            });
+            log('Mengirim request ke AI Model (SDXL Inpainting)...');
+            log('Prompt: Ganti pakaian menjadi ' + clothing);
+
+            // Construct Prompt
+            const prompt = `professional passport photo of a person wearing ${clothing}. Background color is hex code ${selectedBg}. bright lighting, high quality, sharp focus, 8k, photorealistic. No shadows on face.`;
+            const negative_prompt = "blurry, low quality, distorted face, ugly, bad anatomy, deformed, cross-eyed, cartoon, painting, drawing, illustration.";
+
+            // Prepare Data for API
+            const formData = new FormData();
+            formData.append('inputs', currentFile); // Foto Asli
+            formData.append('mask', maskBlob);      // Mask Wajah
+            formData.append('prompt', prompt);
+            formData.append('negative_prompt', negative_prompt);
+            
+            // Parameter Tambahan
+            formData.append('guidance_scale', 7.5); // Kekuatan adherence ke prompt
+            formData.append('strength', 0.8);       // Seberapa banyak gambar diubah (0-1)
+            formData.append('num_inference_steps', 30);
+
+            // Call API
+            const response = await fetch(
+                `https://api-inference.huggingface.co/models/${modelId}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${apiKey}`,
+                    },
+                    body: formData
+                }
+            );
 
             if (!response.ok) {
                 const err = await response.json();
-                throw new Error(err.error || "Gagal menghubungi Worker");
+                throw new Error(err.error || "Gagal terhubung ke API");
             }
 
-            const data = await response.json();
+            log('Menerima hasil dari AI...');
+            const resultBlob = await response.blob();
             
-            if(data.error) throw new Error(data.error);
-
-            // Handle DALL-E Response
-            const b64Json = data.data[0].b64_json;
+            // Display Result
+            const resultUrl = URL.createObjectURL(resultBlob);
+            resultImage.src = resultUrl;
+            resultImage.style.display = 'block';
             
-            resultImg.src = `data:image/png;base64,${b64Json}`;
-            resultImg.style.display = 'block';
-            loader.style.display = 'none';
-            status.innerText = ">>> ✅ SELESAI!";
+            // Setup Download
+            downloadLink.href = resultUrl;
+            downloadLink.style.display = 'inline-block';
+            
+            log('Selesai! Gambar siap diunduh.');
 
         } catch (error) {
-            console.error(error);
-            status.innerText = ">>> ❌ ERROR: " + error.message;
-            alert("Gagal: " + error.message);
-            loader.style.display = 'none';
-            placeholder.style.display = 'block';
+            log(`ERROR: ${error.message}`);
+            alert(`Terjadi kesalahan: ${error.message}\n\nPastikan API Token benar atau coba beberapa saat lagi (Server mungkin penuh).`);
         } finally {
-            btn.disabled = false;
+            generateBtn.disabled = false;
+            generateBtn.innerHTML = '<span>✨ Generate Real AI</span>';
+            loader.style.display = 'none';
         }
     }
 </script>
