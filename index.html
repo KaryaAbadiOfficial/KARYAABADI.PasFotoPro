@@ -249,16 +249,14 @@
 </main>
 
 <script>
-        // Ganti seluruh isi tag <script> Anda dengan kode ini:
     
-    // State Variables
     let currentFile = null;
     let selectedBg = '#db1514';
     
-    // Ganti ke model yang lebih ringan & stabil (SD 2.1)
-    const modelId = "stabilityai/stable-diffusion-2-1-inpainting"; 
+    // KITA GANTI MENGGUNAKAN METODE "Base64" INI.
+    // Metode ini lebih stabil di GitHub Pages daripada mengirim Blob langsung.
+    const modelId = "runwayml/stable-diffusion-inpainting"; 
     
-    // DOM Elements
     const fileInput = document.getElementById('fileInput');
     const fileNameDisplay = document.getElementById('fileName');
     const apiKeyInput = document.getElementById('apiKey');
@@ -294,140 +292,142 @@
         selectedBg = color;
         document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
         element.classList.add('selected');
-        log(`Background diubah ke: ${color}`);
+        log(`Background: ${color}`);
     }
 
-    // Fitur Baru: Resize Gambar Otomatis (Agar API Menerima)
-    function resizeImage(file) {
-        return new Promise((resolve) => {
+    // Konversi File ke Base64 String
+    const fileToBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
             const img = new Image();
             img.onload = () => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                const MAX_SIZE = 768; // Ukuran aman untuk server gratis
+                const MAX_SIZE = 512;
                 let width = img.width;
                 let height = img.height;
 
                 if (width > height) {
-                    if (width > MAX_SIZE) {
-                        height *= MAX_SIZE / width;
-                        width = MAX_SIZE;
-                    }
+                    if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
                 } else {
-                    if (height > MAX_SIZE) {
-                        width *= MAX_SIZE / height;
-                        height = MAX_SIZE;
-                    }
+                    if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
                 }
 
                 canvas.width = width;
                 canvas.height = height;
                 ctx.drawImage(img, 0, 0, width, height);
-
-                canvas.toBlob((blob) => {
-                    resolve(blob);
-                }, 'image/jpeg', 0.9);
+                
+                // Resolve sebagai data URL (base64) tanpa header "data:image/jpeg;base64,"
+                resolve(canvas.toDataURL('image/jpeg', 0.8).split(',')[1]);
             };
-            img.src = URL.createObjectURL(file);
-        });
-    }
+            img.src = reader.result;
+        };
+        reader.onerror = error => reject(error);
+    });
 
-    async function createMask(file) {
-        return new Promise((resolve) => {
+    const createMaskBase64 = file => new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
             const img = new Image();
             img.onload = () => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                canvas.width = img.width;
-                canvas.height = img.height;
+                const MAX_SIZE = 512;
+                let width = img.width;
+                let height = img.height;
 
-                // Putih = Area yang diganti (Baju & Background)
+                if (width > height) {
+                    if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+                } else {
+                    if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                
+                // Background Putih (Hapus)
                 ctx.fillStyle = '#FFFFFF';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillRect(0, 0, width, height);
 
-                // Hitam = Area yang dipertahankan (Wajah)
+                // Mask Hitam (Pertahankan Wajah)
                 ctx.fillStyle = '#000000';
-                const centerX = canvas.width / 2;
-                const topY = canvas.height * 0.05; 
-                const radiusX = canvas.width * 0.35;
-                const radiusY = canvas.height * 0.35;
-
                 ctx.beginPath();
-                ctx.ellipse(centerX, topY + radiusY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+                ctx.ellipse(width/2, height*0.4, width*0.35, height*0.35, 0, 0, 2*Math.PI);
                 ctx.fill();
 
-                canvas.toBlob((blob) => {
-                    resolve(blob);
-                }, 'image/png');
+                resolve(canvas.toDataURL('image/png').split(',')[1]);
             };
-            img.src = URL.createObjectURL(file);
-        });
-    }
+            img.src = reader.result;
+        };
+    });
 
     async function generateImage() {
         const apiKey = apiKeyInput.value.trim();
         const clothing = document.getElementById('clothingSelect').value;
 
-        if (!apiKey) { alert('Masukkan API Token Hugging Face!'); return; }
+        if (!apiKey) { alert('Masukkan API Token (pilih yang WRITE)!'); return; }
         if (!currentFile) { alert('Upload foto dulu!'); return; }
 
         generateBtn.disabled = true;
-        generateBtn.innerHTML = '<span>⏳ Memproses (Resize + AI)...</span>';
+        generateBtn.innerHTML = '<span>⏳ Memproses (Base64 Method)...</span>';
         loader.style.display = 'block';
         resultImage.style.display = 'none';
         placeholder.style.display = 'none';
         downloadLink.style.display = 'none';
         
         try {
-            log('Melakukan resize otomatis...');
-            const resizedFile = await resizeImage(currentFile);
-            log('Membuat mask pelindung wajah...');
-            const maskBlob = await createMask(resizedFile);
+            log('Mengonversi gambar & mask ke Base64...');
+            const [imageB64, maskB64] = await Promise.all([
+                fileToBase64(currentFile),
+                createMaskBase64(currentFile)
+            ]);
 
-            log('Mengirim ke API Model (SD 2.1)...');
+            log('Mengirim request JSON (Format Stabil)...');
 
-            const prompt = `passport photo, person wearing ${clothing}. solid background color ${selectedBg}. professional photography, high quality, 8k, bright lighting.`;
-            const negative_prompt = "ugly, deformed, noisy, blurry, low contrast, text, watermark, bad anatomy, distorted face";
+            const prompt = `professional passport photo, person wearing ${clothing}. solid background color ${selectedBg}. soft lighting, highly detailed.`;
+            const negative_prompt = "ugly, deformed, blurry, bad anatomy, distorted face";
 
-            const formData = new FormData();
-            formData.append('inputs', resizedFile);
-            formData.append('mask', maskBlob);
-            formData.append('prompt', prompt);
-            formData.append('negative_prompt', negative_prompt);
-            formData.append('strength', 0.75); 
-
-            const response = await fetch(
-                `https://api-inference.huggingface.co/models/${modelId}`,
-                {
-                    method: "POST",
-                    headers: { "Authorization": `Bearer ${apiKey}` },
-                    body: formData
-                }
-            );
+            const response = await fetch(`https://api-inference.huggingface.co/models/${modelId}`, {
+                method: "POST",
+                headers: { 
+                    "Authorization": `Bearer ${apiKey}`,
+                    "Content-Type": "application/json" 
+                },
+                body: JSON.stringify({
+                    inputs: imageB64, // Kirim sebagai string base64
+                    mask: maskB64,
+                    prompt: prompt,
+                    negative_prompt: negative_prompt,
+                    strength: 0.85
+                })
+            });
 
             if (!response.ok) {
-                const err = await response.json().catch(() => ({}));
-                throw new Error(err.error || "Gagal. Server mungkin penuh (503).");
+                const errJson = await response.json().catch(() => ({}));
+                throw new Error(`Error ${response.status}: ${errJson.error || response.statusText}`);
             }
 
             const resultBlob = await response.blob();
+            if (!resultBlob.type.startsWith('image/')) throw new Error("Bukan gambar");
+            
             const resultUrl = URL.createObjectURL(resultBlob);
             resultImage.src = resultUrl;
             resultImage.style.display = 'block';
-            
             downloadLink.href = resultUrl;
             downloadLink.style.display = 'inline-block';
-            log('Selesai!');
+            log('SUKSES!');
 
         } catch (error) {
             log(`ERROR: ${error.message}`);
-            alert(`Error: ${error.message}\n\nCoba lagi 1 menit kemudian atau ganti model ID.`);
+            alert(`Gagal: ${error.message}\n\nPastikan token dimulai dengan 'hf_' dan menggunakan jaringan yang sama.`);
         } finally {
             generateBtn.disabled = false;
-            generateBtn.innerHTML = '<span>✨ Generate Real AI</span>';
+            generateBtn.innerHTML = '<span>✨ Generate</span>';
             loader.style.display = 'none';
         }
     }
-
+</script>
 </body>
 </html>
