@@ -311,7 +311,7 @@
 
         .hero-content h1 {
             font-size: 3.5rem;
-            margin-bottom: 10px; /* Dikurangi margin bawah judul */
+            margin-bottom: 10px; 
             line-height: 1.2;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -320,23 +320,14 @@
 
         /* Style teks KUNING, TIDAK MIRING */
         .hero-content em {
-            font-style: normal; /* Tidak miring */
+            font-style: normal; 
             font-size: 1.2rem;
-            color: var(--gold-yellow) !important; /* Kuning */
+            color: var(--gold-yellow) !important; 
             display: block;
             margin-bottom: 30px;
             font-family: 'Roboto', sans-serif;
             font-weight: 500;
             text-transform: none;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            display: none; /* Hide text lama jika ada */
         }
 
         /* --- FLOW SECTION --- */
@@ -397,7 +388,7 @@
 
         th, td {
             padding: 15px;
-            text-align: center; /* RATA TENGAH */
+            text-align: center; 
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -481,7 +472,6 @@
 
         .step-container {
             margin-top: 25px;
-            text-align: left;
         }
 
         .flow-step {
@@ -492,6 +482,12 @@
         
         .flow-step:last-child {
             border-bottom: none;
+        }
+
+        /* --- MODAL TEXT ALIGNMENT (CENTER) --- */
+        .step-text-center {
+            text-align: center !important;
+            margin-bottom: 15px;
         }
 
         /* --- QRIS IMAGE STYLE --- */
@@ -505,7 +501,7 @@
             margin-right: auto;
             border: 1px solid var(--border-color);
             padding: 10px;
-            background-color: #fff; /* QR background usually white */
+            background-color: #fff;
             border-radius: 8px;
         }
 
@@ -554,35 +550,32 @@
 
         /* --- KUSTOMISASI KHUSUS (User Request) --- */
 
-        /* 1. Tombol Dukung Kami di Section Contact */
+        /* 1. CTA Section Button: Blok Hitam (Mode Gelap) & Hitam (Mode Terang) */
         #contact .btn {
-            /* Default (Mode Gelap): Merah, Putih */
-            background-color: var(--primary-red) !important;
-            border: none !important;
+            background-color: #000000 !important; /* Force Black */
+            border: 2px solid #ffffff !important;
             color: white !important;
-            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+            box-shadow: none; /* Hilangkan shadow merah */
         }
 
-        /* Light Mode: Hitam, Putih */
-        body.light-mode #contact .btn {
-            background-color: #000000 !important;
-            border: none !important;
-            color: white !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        }
-
-        /* 2. Judul CTA di Mode Terang */
+        /* 2. Judul CTA di Mode Terang Putih */
         body.light-mode #contact h2 {
             color: #ffffff !important;
         }
 
-        /* 3. Teks Harga QRIS di Modal (Hitam) */
+        /* 3. Teks Harga QRIS di Modal (Kuning Gelap, Hitam Terang) */
         .qris-price-text {
-            color: #000000 !important;
+            /* Default (Dark Mode): Kuning */
+            color: var(--gold-yellow);
             text-align: center;
             font-weight: bold;
             font-size: 1.1rem;
             margin-bottom: 5px;
+        }
+
+        /* Override Light Mode */
+        body.light-mode .qris-price-text {
+            color: #000000 !important;
         }
 
         /* --- RESPONSIVE --- */
@@ -729,10 +722,10 @@
     <!-- CTA / Contact Section -->
     <section id="contact" class="section-padding" style="background-color: var(--primary-red); text-align: center;">
         <div class="container">
-            <!-- Teks Judul Ganti + Putih di Light Mode -->
-            <h2 style="margin-bottom: 20px;">Segera dapatkan Softcopy</h2>
+            <!-- Teks Judul CTA Ganti + Putih di Light Mode -->
+            <h2 style="margin-bottom: 20px;">Segera dapatkan Softcopy!</h2>
             
-            <!-- Tombol Dukung Kami -->
+            <!-- Tombol Dukung Kami (Style via CSS di atas: Blok Hitam) -->
             <button onclick="openModal()" class="btn btn-outline">
                 <i class="fas fa-arrow-right"></i> Dukung Kami
             </button>
@@ -754,37 +747,46 @@
                 <i class="fas fa-hand-holding-heart"></i>
             </div>
             <h3>Akses Layanan Softcopy</h3>
+            <!-- Teks instruksi upload dihapus di sini -->
             
             <div class="step-container">
                 <!-- Step 1: QRIS -->
                 <div class="flow-step">
-                    <p style="margin-bottom: 15px;"><strong>Langkah 1:</strong> Scan QRIS untuk berdonasi.</p>
-                    
-                    <!-- Gambar QRIS -->
-                    <img src="https://z-cdn-media.chatglm.cn/files/f721d913-a5b7-4ad6-8502-4b03c901d262.png?auth_key=1878048310-c4a42395620c450f86fd02da54fb7eb9-0-ddf4f049f09ac0a358be0e49cdf9638c" alt="QRIS Pas Foto Pro" class="qris-img">
-                    
-                    <!-- Teks Harga Warna Hitam -->
-                    <p class="qris-price-text">Dukung Kami : Cuma dengan Rp.1.000.-</p>
+                    <!-- Semu Rata Tengah -->
+                    <div class="step-text-center">
+                        <p><strong>Langkah 1:</strong> Scan QRIS untuk berdonasi.</p>
+                        
+                        <!-- Gambar QRIS -->
+                        <img src="https://z-cdn-media.chatglm.cn/files/f721d913-a5b7-4ad6-8502-4b03c901d262.png?auth_key=1878048310-c4a42395620c450f86fd02da54fb7eb9-0-ddf4f049f09ac0a358be0e49cdf9638c" alt="QRIS Pas Foto Pro" class="qris-img">
+                        
+                        <!-- Teks Harga -->
+                        <p class="qris-price-text">Dukung Kami : Cuma dengan Rp.1.000.-</p>
+                        
+                        <!-- Teks ucapan terima kasih dihapus di sini -->
+                    </div>
                 </div>
 
                 <!-- Step 2: Upload Proof -->
                 <div class="flow-step">
-                    <p style="margin-bottom: 15px;"><strong>Langkah 2:</strong> Upload Bukti Screenshot.</p>
+                    <!-- Semu Rata Tengah -->
+                    <div class="step-text-center">
+                        <p><strong>Langkah 2:</strong> Upload Bukti Screenshot.</p>
 
-                    <div class="file-upload-wrapper">
-                        <label for="proofInput" class="file-upload-label" id="fileLabel">
-                            <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i>
-                            <span>Klik untuk Upload Bukti</span>
-                        </label>
-                        <!-- accept="image/*" agar hanya menerima file gambar -->
-                        <input type="file" id="proofInput" accept="image/*" onchange="updateFileDisplay()">
-                        <div class="file-info" id="fileInfo"></div>
+                        <div class="file-upload-wrapper">
+                            <label for="proofInput" class="file-upload-label" id="fileLabel">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i>
+                                <span>Klik untuk Upload Bukti</span>
+                            </label>
+                            <!-- accept="image/*" agar hanya menerima file gambar -->
+                            <input type="file" id="proofInput" accept="image/*" onchange="updateFileDisplay()">
+                            <div class="file-info" id="fileInfo"></div>
+                        </div>
+                        
+                        <!-- Tombol Verifikasi -->
+                        <button id="verifyBtn" class="btn btn-primary disabled-btn" style="width: 100%; margin-top: 15px;" onclick="verifyAndOpenOpal()">
+                            <i class="fas fa-check-circle"></i> Verifikasi & Mulai
+                        </button>
                     </div>
-                    
-                    <!-- Tombol Verifikasi (Verifikasi & Mulai: Merah/Putih default) -->
-                    <button id="verifyBtn" class="btn btn-primary disabled-btn" style="width: 100%; margin-top: 15px;" onclick="verifyAndOpenOpal()">
-                        <i class="fas fa-check-circle"></i> Verifikasi & Mulai
-                    </button>
                 </div>
             </div>
         </div>
