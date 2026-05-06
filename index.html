@@ -18,7 +18,6 @@
     <style>
         /* --- CSS VARIABLES & THEMES --- */
         :root {
-            /* Default Dark Theme */
             --primary-red: #D32F2F; 
             --accent-red: #ff4d4d;
             --bg-color: #000000; 
@@ -32,6 +31,10 @@
             
             /* Warna Kuning Emas */
             --gold-yellow: #FFD700;
+            
+            /* Status Colors */
+            --status-green: #28a745; /* Hijau Sukses */
+            --status-yellow: #ffc107; /* Kuning Ditolak */
         }
 
         /* Light Mode Override */
@@ -66,13 +69,11 @@
             border-color: #ffffff;
         }
 
-        /* Tag background di dark mode agar teks putih terlihat */
         .usage-tag {
             background-color: rgba(255,255,255,0.15) !important;
             color: #ffffff !important;
         }
 
-        /* Table Header Background Dark Mode */
         th {
             background-color: rgba(255,255,255,0.1) !important;
         }
@@ -92,23 +93,19 @@
         }
         
         body.light-mode .file-upload-label:hover {
-            border-color: #000000;
+            border-color: #000;
         }
 
-        /* Tag background di light mode agar teks hitam terlihat */
         body.light-mode .usage-tag {
             background-color: rgba(0,0,0,0.1) !important;
             color: #000000 !important;
         }
 
         /* --- HERO SECTION SPECIAL LOGIC --- */
-        
-        /* Default Hero */
         .hero {
             background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
         }
 
-        /* Hero di Mode Terang: Teks JADI PUTIH, Background Tetap HITAM */
         body.light-mode .hero {
             background: #000000; 
         }
@@ -117,11 +114,7 @@
         }
 
         /* --- GLOBAL STYLES --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Roboto', sans-serif;
@@ -132,26 +125,16 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        h1, h2, h3, h4 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        ul {
-            list-style: none;
-        }
+        h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
 
         /* --- UTILITIES --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .section-title { text-align: center; margin-bottom: 3rem; }
+        .section-title h2 { font-size: 2rem; color: var(--text-white); }
+        .section-title span { font-weight: 800; }
+        .section-padding { padding: 80px 0; }
 
         .btn {
             display: inline-block;
@@ -172,10 +155,7 @@
             box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
         }
 
-        .btn-primary:hover {
-            background-color: var(--accent-red);
-            transform: translateY(-2px);
-        }
+        .btn-primary:hover { background-color: var(--accent-red); transform: translateY(-2px); }
 
         .btn-outline {
             border: 2px solid var(--text-white);
@@ -183,33 +163,8 @@
             color: var(--text-white);
         }
 
-        body.light-mode .btn-outline {
-            border-color: #000;
-            color: #000;
-        }
-
-        .btn-outline:hover {
-            background: var(--text-white);
-            color: var(--bg-color);
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-title h2 {
-            font-size: 2rem;
-            color: var(--text-white);
-        }
-
-        .section-title span {
-            font-weight: 800; 
-        }
-
-        .section-padding {
-            padding: 80px 0;
-        }
+        body.light-mode .btn-outline { border-color: #000; color: #000; }
+        .btn-outline:hover { background: var(--text-white); color: var(--bg-color); }
 
         /* --- HEADER --- */
         header {
@@ -223,377 +178,155 @@
             backdrop-filter: blur(5px);
         }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-img {
-            height: 45px;
-            width: auto;
-        }
-
-        .brand-name {
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: #ffffff; 
-            line-height: 1.2;
-        }
-
-        /* Override warna PRO menjadi Kuning */
-        .pro-sup {
-            font-size: 0.6em;
-            vertical-align: super;
-            font-weight: 900;
-            margin-left: 2px;
-            color: var(--gold-yellow) !important;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #cccccc; 
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: #ffffff; 
-        }
-
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo-container { display: flex; align-items: center; gap: 10px; }
+        .logo-img { height: 45px; width: auto; }
+        .brand-name { font-size: 1rem; font-weight: 700; letter-spacing: 1px; color: #ffffff; line-height: 1.2; }
+        .pro-sup { font-size: 0.6em; vertical-align: super; font-weight: 900; margin-left: 2px; color: var(--gold-yellow) !important; }
+        
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a { font-size: 0.9rem; font-weight: 500; color: #cccccc; transition: var(--transition); }
+        .nav-links a:hover { color: #ffffff; }
+        
         .theme-toggle-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #cccccc;
-            padding: 8px 15px;
-            border-radius: 5px;
-            transition: var(--transition);
+            display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem;
+            font-weight: 500; color: #cccccc; padding: 8px 15px; border-radius: 5px; transition: var(--transition);
         }
+        .theme-toggle-item:hover { background-color: rgba(255,255,255,0.1); color: #ffffff; }
+        .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; color: #ffffff; }
 
-        .theme-toggle-item:hover {
-            background-color: rgba(255,255,255,0.1);
-            color: #ffffff;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #ffffff;
-        }
-
-        /* --- HERO SECTION --- */
+        /* --- HERO --- */
         .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding-top: 80px;
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding-top: 80px;
         }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px; 
-            line-height: 1.2;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #ffffff;
-        }
-
-        /* Style teks KUNING, TIDAK MIRING */
-        .hero-content em {
-            font-style: normal; 
-            font-size: 1.2rem;
-            color: var(--gold-yellow) !important; 
-            display: block;
-            margin-bottom: 30px;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 500;
-            text-transform: none;
-        }
+        .hero-content h1 { font-size: 3.5rem; margin-bottom: 10px; line-height: 1.2; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; }
+        .hero-content em { font-style: normal; font-size: 1.2rem; color: var(--gold-yellow) !important; display: block; margin-bottom: 30px; font-family: 'Roboto', sans-serif; font-weight: 500; text-transform: none; }
 
         /* --- FLOW SECTION --- */
-        .flow-steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-
+        .flow-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 50px; }
         .step-card {
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
+            background-color: var(--card-bg); padding: 30px; border-radius: 10px; text-align: center;
+            border: 1px solid var(--border-color); transition: var(--transition);
         }
+        .step-card:hover { border-color: #ffffff; transform: translateY(-5px); box-shadow: var(--shadow); }
+        body.light-mode .step-card:hover { border-color: #000000; }
+        .step-icon { font-size: 2.5rem; margin-bottom: 20px; }
+        .step-card h3 { margin-bottom: 10px; font-size: 1.2rem; }
+        .step-card p { font-size: 0.9rem; color: var(--text-gray); }
 
-        .step-card:hover {
-            border-color: #ffffff; 
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-        }
-        body.light-mode .step-card:hover {
-            border-color: #000000; 
-        }
-
-        .step-icon {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .step-card h3 {
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-
-        .step-card p {
-            font-size: 0.9rem;
-            color: var(--text-gray);
-        }
-
-        /* --- SIZE GUIDE TABLE --- */
-        .table-responsive {
-            overflow-x: auto;
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-            font-size: 0.9rem;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: center; 
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
+        /* --- SIZE GUIDE --- */
+        .table-responsive { overflow-x: auto; background-color: var(--card-bg); border-radius: 10px; box-shadow: var(--shadow); }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; font-size: 0.9rem; }
+        th, td { padding: 15px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        th { font-weight: 700; text-transform: uppercase; }
         tr:last-child td { border-bottom: none; }
-
-        .usage-tag {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.65rem;
-            margin-right: 3px;
-            margin-bottom: 3px;
-        }
+        .usage-tag { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 0.65rem; margin-right: 3px; margin-bottom: 3px; }
 
         /* --- FOOTER --- */
-        footer {
-            background-color: #000;
-            padding: 30px 0;
-            text-align: center;
-            border-top: 1px solid #222;
-        }
-
-        footer p {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-        }
+        footer { background-color: #000; padding: 30px 0; text-align: center; border-top: 1px solid #222; }
+        footer p { color: var(--text-gray); font-size: 0.9rem; }
 
         /* --- MODAL --- */
         .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 2000; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.95); 
-            backdrop-filter: blur(5px);
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.95); backdrop-filter: blur(5px);
+            align-items: center; justify-content: center;
         }
-
         .modal-content {
-            background-color: var(--card-bg);
-            margin: auto;
-            padding: 40px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            position: relative;
-            animation: modalFade 0.4s;
-            box-shadow: 0 0 20px rgba(211, 47, 47, 0.3);
+            background-color: var(--card-bg); margin: auto; padding: 40px; border: 1px solid var(--border-color);
+            border-radius: 10px; width: 90%; max-width: 500px; text-align: center; position: relative;
+            animation: modalFade 0.4s; box-shadow: 0 0 20px rgba(211, 47, 47, 0.3);
         }
+        @keyframes modalFade { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
+        .close-modal { position: absolute; top: 15px; right: 20px; color: var(--text-gray); font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-modal:hover { color: #ffffff; }
+        .step-container { margin-top: 25px; }
+        .flow-step { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .flow-step:last-child { border-bottom: none; }
+        .step-text-center { text-align: center !important; margin-bottom: 15px; }
 
-        @keyframes modalFade {
-            from {opacity: 0; transform: translateY(-20px);}
-            to {opacity: 1; transform: translateY(0);}
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            color: var(--text-gray);
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close-modal:hover {
-            color: #ffffff;
-        }
-
-        .step-container {
-            margin-top: 25px;
-        }
-
-        .flow-step {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .flow-step:last-child {
-            border-bottom: none;
-        }
-
-        /* --- MODAL TEXT ALIGNMENT (CENTER) --- */
-        .step-text-center {
-            text-align: center !important;
-            margin-bottom: 15px;
-        }
-
-        /* --- QRIS IMAGE STYLE --- */
         .qris-img {
-            width: 100%;
-            max-width: 280px;
-            height: auto;
-            margin-bottom: 15px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            background-color: #fff;
-            border-radius: 8px;
+            width: 100%; max-width: 280px; height: auto; margin-bottom: 15px; display: block;
+            margin-left: auto; margin-right: auto; border: 1px solid var(--border-color);
+            padding: 10px; background-color: #fff; border-radius: 8px;
         }
 
-        /* --- FILE UPLOAD STYLES --- */
-        .file-upload-wrapper {
-            margin-bottom: 15px;
-        }
-
+        .file-upload-wrapper { margin-bottom: 15px; }
         .file-upload-label {
-            display: flex;
+            display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+            padding: 20px; border: 2px dashed var(--border-color); border-radius: 8px; cursor: pointer;
+            transition: var(--transition); font-size: 0.9rem; color: var(--text-gray); background: rgba(255,255,255,0.02);
+        }
+        .file-upload-label:hover { background: rgba(255,255,255,0.05); }
+        #proofInput { display: none; }
+        .file-info { margin-top: 10px; font-size: 0.85rem; color: var(--primary-red); font-weight: 500; min-height: 20px; }
+        
+        /* --- NEW STATUS BOX STYLES (User Request) --- */
+        .status-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none; /* Hidden by default */
+            font-weight: bold;
+            font-size: 1rem;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            width: 100%;
-            padding: 20px;
-            border: 2px dashed var(--border-color);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.9rem;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Status: TERVERIFIKASI (Green, White Text) */
+        .status-success {
+            background-color: var(--status-green) !important;
+            color: #ffffff !important;
+            border: 1px solid #1e7e34;
+        }
+
+        /* Status: DITOLAK (Yellow, Black Text) */
+        .status-reject {
+            background-color: var(--status-yellow) !important;
+            color: #000000 !important;
+            border: 1px solid #d39e00;
+        }
+
+        /* Status: LOADING/SCANNING (Gray) */
+        .status-loading {
+            background-color: rgba(255,255,255,0.1);
             color: var(--text-gray);
-            background: rgba(255,255,255,0.02);
+            font-size: 0.9rem;
         }
 
-        .file-upload-label:hover {
-            background: rgba(255,255,255,0.05);
+        .disabled-btn { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+        /* --- KUSTOMISASI KHUSUS --- */
+        #contact .btn { background-color: #000000 !important; border: 2px solid #ffffff !important; color: white !important; box-shadow: none; }
+        body.light-mode #contact h2 { color: #ffffff !important; }
+        .qris-price-text { color: var(--gold-yellow); text-align: center; font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
+        body.light-mode .qris-price-text { color: #000000 !important; }
+
+        /* FIX: Warna Teks & Ikon Tombol Verifikasi DI KEDUA MODE JADI PUTIH */
+        #verifyBtn {
+            color: #ffffff !important;
         }
-
-        #proofInput {
-            display: none;
-        }
-
-        .file-info {
-            margin-top: 10px;
-            font-size: 0.85rem;
-            color: var(--primary-red);
-            font-weight: 500;
-            min-height: 20px;
-        }
-
-        .disabled-btn {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        /* --- KUSTOMISASI KHUSUS (User Request) --- */
-
-        /* 1. CTA Section Button: Blok Hitam (Mode Gelap) & Hitam (Mode Terang) */
-        #contact .btn {
-            background-color: #000000 !important; /* Force Black */
-            border: 2px solid #ffffff !important;
-            color: white !important;
-            box-shadow: none; /* Hilangkan shadow merah */
-        }
-
-        /* 2. Judul CTA di Mode Terang Putih */
-        body.light-mode #contact h2 {
+        
+        /* FIX KHUSUS: Paksa Ikon di dalam tombol Verifikasi jadi PUTIH */
+        #verifyBtn i {
             color: #ffffff !important;
         }
 
-        /* 3. Teks Harga QRIS di Modal (Kuning Gelap, Hitam Terang) */
-        .qris-price-text {
-            /* Default (Dark Mode): Kuning */
-            color: var(--gold-yellow);
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-
-        /* Override Light Mode */
-        body.light-mode .qris-price-text {
-            color: #000000 !important;
-        }
-
-        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             .hero-content h1 { font-size: 2rem; }
             .nav-links { display: none; }
             .mobile-menu-btn { display: block; }
             .nav-links.active {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                background-color: #000; 
-                padding: 20px;
-                border-bottom: 1px solid #333;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+                display: flex; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%;
+                background-color: #000; padding: 20px; border-bottom: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             }
         }
     </style>
@@ -629,10 +362,7 @@
     <section id="home" class="hero">
         <div class="container hero-content">
             <h1>PAS FOTO PROFESIONAL</h1>
-            <!-- Teks KUNING, TIDAK MIRING -->
             <em>Layanan Pas Foto dengan Kualitas Premium.</em>
-            
-            <!-- Buat Foto Sekarang: Mode Gelap Merah/Putih, Mode Terang Merah/Putih (Default btn-primary) -->
             <button onclick="openModal()" class="btn btn-primary"><i class="fas fa-download"></i> Buat Foto Sekarang</button>
         </div>
     </section>
@@ -658,8 +388,8 @@
                 </div>
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                    <h3>3. Upload & Download</h3>
-                    <p>Upload bukti screenshot, sistem akan otomatis membuka Opal.</p>
+                    <h3>3. Upload & Verifikasi</h3>
+                    <p>Upload bukti screenshot. Data harus unik (berbeda) untuk membuka akses.</p>
                 </div>
             </div>
         </div>
@@ -722,10 +452,7 @@
     <!-- CTA / Contact Section -->
     <section id="contact" class="section-padding" style="background-color: var(--primary-red); text-align: center;">
         <div class="container">
-            <!-- Teks Judul CTA Ganti + Putih di Light Mode -->
             <h2 style="margin-bottom: 20px;">Segera dapatkan Softcopy!</h2>
-            
-            <!-- Tombol Dukung Kami (Style via CSS di atas: Blok Hitam) -->
             <button onclick="openModal()" class="btn btn-outline">
                 <i class="fas fa-arrow-right"></i> Dukung Kami
             </button>
@@ -739,7 +466,7 @@
         </div>
     </footer>
 
-    <!-- MODAL LOGIC (QRIS Flow) -->
+    <!-- MODAL LOGIC -->
     <div id="paymentModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -747,28 +474,22 @@
                 <i class="fas fa-hand-holding-heart"></i>
             </div>
             <h3>Akses Layanan Softcopy</h3>
-            <!-- Teks instruksi upload dihapus di sini -->
             
             <div class="step-container">
                 <!-- Step 1: QRIS -->
                 <div class="flow-step">
-                    <!-- Semu Rata Tengah -->
                     <div class="step-text-center">
-                        <p><strong>Langkah 1:</strong> Scan QRIS untuk berdonasi.</p>
+                        <p><strong>Langkah 1:</strong> Scan QRIS.</p>
                         
-                        <!-- Gambar QRIS -->
-                        <img src="https://z-cdn-media.chatglm.cn/files/f721d913-a5b7-4ad6-8502-4b03c901d262.png?auth_key=1878048310-c4a42395620c450f86fd02da54fb7eb9-0-ddf4f049f09ac0a358be0e49cdf9638c" alt="QRIS Pas Foto Pro" class="qris-img">
+                        <!-- QRIS IMAGE UPDATED (USER UPLOAD) -->
+                        <img src="https://z-cdn-media.chatglm.cn/files/510d0b4b-c288-4847-a4dc-d874df146914.png?auth_key=1878083229-2e95e1f327654af7b4480b374f6503be-0-35b44fc783d603921b840d8787021a9e" alt="QRIS Pas Foto Pro" class="qris-img">
                         
-                        <!-- Teks Harga -->
-                        <p class="qris-price-text">Dukung Kami : Cuma dengan Rp.1.000.-</p>
-                        
-                        <!-- Teks ucapan terima kasih dihapus di sini -->
+                        <p class="qris-price-text">Dukung Kami : Rp.1.000.-</p>
                     </div>
                 </div>
 
-                <!-- Step 2: Upload Proof -->
+                <!-- Step 2: Upload & Verify -->
                 <div class="flow-step">
-                    <!-- Semu Rata Tengah -->
                     <div class="step-text-center">
                         <p><strong>Langkah 2:</strong> Upload Bukti Screenshot.</p>
 
@@ -777,13 +498,14 @@
                                 <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i>
                                 <span>Klik untuk Upload Bukti</span>
                             </label>
-                            <!-- accept="image/*" agar hanya menerima file gambar -->
-                            <input type="file" id="proofInput" accept="image/*" onchange="updateFileDisplay()">
+                            <input type="file" id="proofInput" accept="image/*" onchange="handleFileSelection()">
                             <div class="file-info" id="fileInfo"></div>
                         </div>
                         
-                        <!-- Tombol Verifikasi -->
-                        <button id="verifyBtn" class="btn btn-primary disabled-btn" style="width: 100%; margin-top: 15px;" onclick="verifyAndOpenOpal()">
+                        <!-- Container untuk Status Box (Verifikasi / Ditolak) -->
+                        <div id="statusBox" class="status-box"></div>
+                        
+                        <button id="verifyBtn" class="btn btn-primary disabled-btn" style="width: 100%; margin-top: 15px;" onclick="startVerificationProcess()">
                             <i class="fas fa-check-circle"></i> Verifikasi & Mulai
                         </button>
                     </div>
@@ -794,138 +516,184 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // KONFIGURASI URL OPAL
+        // KONFIGURASI
         const OPAL_SECRET_URL = "https://opal.google/app/1UZNUPcU1vUdz2_HIi_dBihXFXW9tXSTB";
+        const STORAGE_KEY = "karyaAbadi_lastVerifiedHash";
+        
+        let currentFile = null;
+        let currentFileHash = null;
+
+        // --- FILE HASHING FUNCTION (Untuk cek keunikan data gambar) ---
+        // Fungsi ini membaca byte-demi-byte gambar untuk membuat ID unik.
+        // Jika gambar diedit (1 pixel berubah), Hash akan berubah.
+        async function calculateFileHash(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
 
         // Modal Functions
         const modal = document.getElementById("paymentModal");
 
         function openModal() {
             modal.style.display = "flex";
-            // Check status saat modal dibuka (untuk memastikan UI sesuai)
-            checkFileStatus();
+            resetUI();
         }
 
         function closeModal() {
             modal.style.display = "none";
+            // Berhenti semua proses jika modal ditutup
+            clearInterval(window.scanInterval);
         }
 
         window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
+            if (event.target == modal) closeModal();
         }
 
-        // --- LOGIKA UPLOAD & DATA BERBEDA ---
+        function resetUI() {
+            document.getElementById('proofInput').value = '';
+            document.getElementById('fileInfo').innerText = '';
+            document.getElementById('statusBox').style.display = 'none';
+            document.getElementById('statusBox').className = 'status-box';
+            document.getElementById('fileLabel').innerHTML = '<i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i> <span>Klik untuk Upload Bukti</span>';
+            document.getElementById('verifyBtn').classList.add('disabled-btn');
+            currentFile = null;
+            currentFileHash = null;
+        }
 
-        function updateFileDisplay() {
+        // --- HANDLE FILE SELECTION ---
+        async function handleFileSelection() {
             const input = document.getElementById('proofInput');
             const info = document.getElementById('fileInfo');
             const btn = document.getElementById('verifyBtn');
             const label = document.getElementById('fileLabel');
 
             if (input.files && input.files[0]) {
-                const currentFileName = input.files[0].name;
+                currentFile = input.files[0];
                 
-                // Ambil nama file terakhir yang sudah diverifikasi
-                const lastVerifiedFile = localStorage.getItem('karyaAbadi_lastVerified');
-
-                // Update Tampilan Label & Info
-                info.innerText = "File terpilih: " + currentFileName;
-                label.innerHTML = '<i class="fas fa-check"></i> ' + currentFileName;
-
-                // LOGIKA PENTING: Cek apakah file berbeda
-                if (currentFileName === lastVerifiedFile) {
-                    // File SAMA -> Blokir
-                    btn.classList.add("disabled-btn");
-                    btn.style.backgroundColor = "#555"; // Warna abu-abu (disabled)
-                    info.innerText = "Mohon upload berkas/data yang berbeda.";
-                    info.style.color = "#ff9800"; // Warna oranye (peringatan)
+                // Hitung Hash untuk cek duplikasi di background
+                currentFileHash = await calculateFileHash(currentFile);
+                
+                // Tampilkan nama file
+                info.innerText = "File terpilih: " + currentFile.name;
+                label.innerHTML = '<i class="fas fa-file-image"></i> ' + currentFile.name;
+                
+                // Cek cepat apakah file ini sama dengan yang terakhir sukses
+                const lastHash = localStorage.getItem(STORAGE_KEY);
+                if (currentFileHash === lastHash) {
+                    // Jika file sama persis dengan yang lama, beri peringatan di info text
+                    info.innerText = "File terdeteksi sama (Data Tidak Berbeda). Upload ulang gambar baru.";
+                    info.style.color = "#ff9800"; 
+                    // Biarkan tombol aktif agar user bisa mencoba dan melihat pesan "AKSES DITOLAK"
                 } else {
-                    // File BEDA/BARU -> Izinkan
-                    btn.classList.remove("disabled-btn");
-                    btn.style.backgroundColor = ""; // Reset warna (jadi merah lagi)
                     info.style.color = "var(--primary-red)";
                 }
 
+                btn.classList.remove('disabled-btn');
             } else {
-                // Reset UI jika tidak ada file
-                info.innerText = "";
-                label.innerHTML = '<i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i> <span>Klik untuk Upload Bukti</span>';
-                btn.classList.add("disabled-btn");
-                btn.style.backgroundColor = "";
+                resetUI();
             }
         }
 
-        function verifyAndOpenOpal() {
-            // Validasi File
-            const input = document.getElementById('proofInput');
-            if (input.files.length === 0) {
-                alert("Mohon upload bukti screenshot terlebih dahulu.");
-                return;
-            }
+        // --- VERIFICATION PROCESS CORE ---
+        function startVerificationProcess() {
+            if (!currentFile) return;
 
-            const currentFileName = input.files[0].name;
-            const lastVerifiedFile = localStorage.getItem('karyaAbadi_lastVerified');
-
-            // Validasi Ganda: Pastikan file benar-benar berbeda saat diklik
-            if (currentFileName === lastVerifiedFile) {
-                alert("Berkas ini sudah diverifikasi sebelumnya. Silakan upload berkas yang berbeda.");
-                return;
-            }
-
+            const statusBox = document.getElementById('statusBox');
             const btn = document.getElementById('verifyBtn');
-            const info = document.getElementById('fileInfo');
+            const lastVerifiedHash = localStorage.getItem(STORAGE_KEY);
 
-            // Simulasi Loading
+            // 1. Cek apakah HASH sama persis dengan yang tersimpan
+            if (currentFileHash === lastVerifiedHash) {
+                // KONDISI: SAMA / DUPLIKAT
+                showStatus("AKSES DITOLAK", "reject");
+                return;
+            }
+
+            // 2. KONDISI: BARU / BERBEDA
+            // Mulai simulasi scanning
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memverifikasi...';
-            info.innerText = "Sedang memproses...";
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            
+            const scanSteps = [
+                "Menganalisa: Transaksi berhasil!...",
+                "Membaca: Terima Pembayaran via...",
+                "Validasi: Total Terima: Rp...",
+                "Mengecek: ID Transaksi & RRN...",
+                "Scan Warna: Mendeteksi editan...",
+                "Verifikasi Integritas Gambar..."
+            ];
 
-            // Delay 1.5 detik
+            let stepIndex = 0;
+            
+            // Tampilkan status loading pertama
+            statusBox.style.display = 'flex';
+            statusBox.className = 'status-box status-loading';
+            statusBox.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> ' + scanSteps[0];
+
+            // Interval untuk ganti teks simulasi
+            window.scanInterval = setInterval(() => {
+                stepIndex++;
+                if (stepIndex < scanSteps.length) {
+                    statusBox.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> ' + scanSteps[stepIndex];
+                } else {
+                    clearInterval(window.scanInterval);
+                    finalizeVerification();
+                }
+            }, 600); // Ganti tiap 600ms
+        }
+
+        function finalizeVerification() {
+            const statusBox = document.getElementById('statusBox');
+            const btn = document.getElementById('verifyBtn');
+
+            // Jika sampai sini berarti data unik dan valid (simulasi sukses)
+            
+            // Simpan Hash Baru
+            localStorage.setItem(STORAGE_KEY, currentFileHash);
+
+            // Tampilkan TERVERIFIKASI (Hijau, Putih)
+            showStatus("TERVERIFIKASI", "success");
+
+            // Buka Link Opal
             setTimeout(() => {
-                // Simpan nama file ini sebagai "File Terakhir"
-                localStorage.setItem('karyaAbadi_lastVerified', currentFileName);
-
-                info.innerText = "Verifikasi Berhasil! Mengarahkan...";
-                info.style.color = "#4CAF50"; // Hijau sukses
-
-                // Buka Opal
                 window.open(OPAL_SECRET_URL, '_blank');
-
-                // Update UI Tombol setelah sukses
-                btn.innerHTML = '<i class="fas fa-check"></i> Selesai';
-                btn.classList.remove("btn-primary");
+                
+                // Reset tombol untuk next upload
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
                 btn.style.backgroundColor = "#4CAF50";
-
-                // Reset tombol setelah 2 detik (agar siap untuk upload file baru lain)
+                
                 setTimeout(() => {
-                    // Teks tombol diganti menjadi "Verifikasi & Mulai"
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Verifikasi & Mulai';
-                    btn.classList.add("disabled-btn"); // Matikan sampai user upload file baru
-                    btn.classList.add("btn-primary");
-                    btn.style.backgroundColor = "";
-                    
-                    info.innerText = "Upload bukti screenshot dengan data/berkas yang berbeda untuk akses ulang.";
-                    info.style.color = "#ff9800";
-                }, 2000);
-
-            }, 1500);
+                    resetUI();
+                }, 3000);
+            }, 1000);
         }
 
-        // Fungsi cek status saat modal terbuka (untuk mengembalikan state UI)
-        function checkFileStatus() {
-            // Panggil fungsi updateFileDisplay untuk refresh UI berdasarkan input saat ini
-            updateFileDisplay();
+        // Helper: Menampilkan Status Box
+        function showStatus(message, type) {
+            const statusBox = document.getElementById('statusBox');
+            statusBox.style.display = 'flex';
+            statusBox.innerHTML = ""; // Clear content
+
+            if (type === "success") {
+                // Green Block, White Text, Check Icon
+                statusBox.className = 'status-box status-success';
+                statusBox.innerHTML = '<i class="fas fa-check-circle"></i> ' + message;
+            } else if (type === "reject") {
+                // Yellow Block, Black Text, X Icon
+                statusBox.className = 'status-box status-reject';
+                statusBox.innerHTML = '<i class="fas fa-times-circle"></i> ' + message;
+            }
         }
 
-        // Mobile Menu Toggle
+        // Mobile Menu & Theme
         function toggleMenu() {
             const nav = document.getElementById("navLinks");
             nav.classList.toggle("active");
         }
 
-        // Theme Toggle Function
         function toggleTheme() {
             const body = document.body;
             const text = document.getElementById("menuThemeText");
@@ -948,5 +716,129 @@
             });
         });
     </script>
+    <script>
+(function () {
+  let adClosed = false;
+
+  function createAd() {
+    if (adClosed) return;
+    if (document.getElementById("anchorAd")) return;
+
+    const ad = document.createElement("div");
+    ad.id = "anchorAd";
+
+    ad.innerHTML = `
+      <div class="ad-box">
+        <span class="close-btn">✕</span>
+
+        <a href="https://monetag.com/?ref_id=ttxJ" target="_blank">
+          <img src="https://latestlogo.com/wp-content/uploads/2024/03/monetag.png" class="logo"/>
+        </a>
+
+        <div class="text1">Hasilkan Uang dari Internet</div>
+        <div class="text2">CUMA MODAL HP</div>
+
+        <a href="https://omg10.com/4/10633681" target="_blank" class="btn">
+          MULAI
+        </a>
+      </div>
+    `;
+
+    document.body.appendChild(ad);
+
+    ad.querySelector(".close-btn").onclick = function () {
+      ad.remove();
+      adClosed = true;
+    };
+  }
+
+  setInterval(createAd, 10000);
+
+  const style = document.createElement("style");
+  style.innerHTML = `
+    #anchorAd {
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      z-index: 9999;
+      animation: slideUp 0.4s ease;
+    }
+
+    .ad-box {
+      background: #ffffff;
+      color: #000;
+      width: 90%;
+      max-width: 420px;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      position: relative;
+    }
+
+    /* LOGO DIPERBESAR */
+    .logo {
+      width: 140px;
+      max-width: 70%;
+      margin-bottom: 10px;
+    }
+
+    .text1 {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .text2 {
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #FFD700;
+      color: #000;
+      font-weight: bold;
+      padding: 10px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #ffcc00;
+      transform: scale(1.05);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      color: #333;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(80px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .logo {
+        width: 120px;
+      }
+      .text1 { font-size: 14px; }
+      .text2 { font-size: 13px; }
+    }
+  `;
+
+  document.head.appendChild(style);
+})();
+</script>
 </body>
 </html>
