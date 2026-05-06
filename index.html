@@ -310,7 +310,7 @@
 
         .hero-content h1 {
             font-size: 3.5rem;
-            margin-bottom: 10px;
+            margin-bottom: 10px; /* Dikurangi margin bawah judul */
             line-height: 1.2;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -493,19 +493,22 @@
             border-bottom: none;
         }
 
-        /* --- FILE UPLOAD STYLES --- */
-        .example-proof-img {
+        /* --- QRIS IMAGE STYLE --- */
+        .qris-img {
             width: 100%;
-            max-width: 300px;
+            max-width: 280px;
             height: auto;
-            border: 1px dashed var(--border-color);
-            border-radius: 8px;
             margin-bottom: 15px;
             display: block;
             margin-left: auto;
             margin-right: auto;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            background-color: #fff; /* QR background usually white */
+            border-radius: 8px;
         }
 
+        /* --- FILE UPLOAD STYLES --- */
         .file-upload-wrapper {
             margin-bottom: 15px;
         }
@@ -623,7 +626,7 @@
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-heart"></i></div>
                     <h3>2. Dukung Kami</h3>
-                    <p>Lakukan donasi dukungan melalui Saweria dan simpan screenshot buktinya.</p>
+                    <p>Scan QRIS untuk donasi Rp.1.000,- dan simpan screenshot buktinya.</p>
                 </div>
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
@@ -705,7 +708,7 @@
         </div>
     </footer>
 
-    <!-- MODAL LOGIC (Upload Flow) -->
+    <!-- MODAL LOGIC (QRIS Flow) -->
     <div id="paymentModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -713,28 +716,27 @@
                 <i class="fas fa-hand-holding-heart"></i>
             </div>
             <h3>Akses Layanan Softcopy</h3>
-            <p style="font-size: 0.8rem; margin-bottom: 15px; color: var(--text-gray);">
-                *Upload bukti screenshot. Link akan aktif jika data/berkas berbeda dari sebelumnya.
-            </p>
+            <!-- Teks instruksi upload dihapus di sini -->
             
             <div class="step-container">
-                <!-- Step1: Saweria -->
+                <!-- Step 1: QRIS -->
                 <div class="flow-step">
-                    <p style="margin-bottom: 15px;"><strong>Langkah 1:</strong> Lakukan donasi melalui Saweria.</p>
-                    <a href="https://saweria.co/KaryaAbadi" target="_blank" class="btn btn-primary" style="width: 100%;">
-                        <i class="fas fa-external-link-alt"></i> Buka Saweria
-                    </a>
+                    <p style="margin-bottom: 15px;"><strong>Langkah 1:</strong> Scan QRIS untuk berdonasi.</p>
+                    
+                    <!-- Gambar QRIS -->
+                    <img src="https://z-cdn-media.chatglm.cn/files/f721d913-a5b7-4ad6-8502-4b03c901d262.png?auth_key=1878048310-c4a42395620c450f86fd02da54fb7eb9-0-ddf4f049f09ac0a358be0e49cdf9638c" alt="QRIS Pas Foto Pro" class="qris-img">
+                    
+                    <!-- Teks Harga -->
+                    <p style="text-align: center; font-weight: bold; color: var(--gold-yellow); font-size: 1.1rem; margin-bottom: 5px;">
+                        Dukung Kami : Cuma dengan Rp.1.000.-
+                    </p>
+                    
+                    <!-- Teks ucapan terima kasih dihapus di sini -->
                 </div>
 
                 <!-- Step 2: Upload Proof -->
                 <div class="flow-step">
                     <p style="margin-bottom: 15px;"><strong>Langkah 2:</strong> Upload Bukti Screenshot.</p>
-                    
-                    <!-- Contoh Bukti -->
-                    <img src="https://z-cdn-media.chatglm.cn/files/0e147b45-ef4d-463c-9fd3-9dfa30615334.png?auth_key=1878042235-a09b10761c6a45aea154c77227e90bee-0-e3d56868b0a09bf1062d22c4a8008ea9" alt="Contoh Bukti Screenshot" class="example-proof-img">
-                    <p style="font-size: 0.75rem; color: var(--text-gray); margin-bottom: 15px; text-align: center;">
-                        *Contoh bukti donasi yang valid.
-                    </p>
 
                     <div class="file-upload-wrapper">
                         <label for="proofInput" class="file-upload-label" id="fileLabel">
@@ -746,7 +748,7 @@
                         <div class="file-info" id="fileInfo"></div>
                     </div>
                     
-                    <!-- Tombol Verifikasi (Teks Diganti) -->
+                    <!-- Tombol Verifikasi -->
                     <button id="verifyBtn" class="btn btn-primary disabled-btn" style="width: 100%; margin-top: 15px;" onclick="verifyAndOpenOpal()">
                         <i class="fas fa-check-circle"></i> Verifikasi & Mulai
                     </button>
