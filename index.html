@@ -312,7 +312,7 @@
         /* --- KUSTOMISASI KHUSUS --- */
         #contact .btn { background-color: #000000 !important; border: 2px solid #ffffff !important; color: white !important; box-shadow: none; }
         body.light-mode #contact h2 { color: #ffffff !important; }
-        .qris-price-text { color: var(--gold-yellow); text-align: center; font-weight: bold; font-size:1.1rem; margin-bottom: 5px; }
+        .qris-price-text { color: var(--gold-yellow); text-align: center; font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
         body.light-mode .qris-price-text { color: #000000 !important; }
 
         #verifyBtn { color: #ffffff !important; }
@@ -499,7 +499,10 @@
                 <div class="flow-step">
                     <div class="step-text-center">
                         <p><strong>Langkah 1:</strong> Scan QRIS.</p>
-                        <img src="https://z-cdn-media.chatglm.cn/files/510d0b4b-c288-4847-a4dc-d874df146914.png?auth_key=1878083229-2e95e1f327654af7b4480b374f6503be-0-35b44fc783d603921b840d8787021a9e" alt="QRIS Pas Foto Pro" class="qris-img">
+                        
+                        <!-- QRIS IMAGE UPDATED (NEW USER UPLOAD) -->
+                        <img src="https://z-cdn-media.chatglm.cn/files/5a05ede0-b812-4ad2-bbad-fa022fc5b42a.png?auth_key=1878102707-48fc6dd3fed44155b02bdfcb99ecf4f0-0-37c4428294b7205f4405e727b35eba07" alt="QRIS Pas Foto Pro" class="qris-img">
+                        
                         <p class="qris-price-text">Dukung Kami : Rp.1.000.-</p>
                     </div>
                 </div>
@@ -539,18 +542,28 @@
         let currentFile = null;
         let currentFileHash = null;
 
-        // --- HELPER: AMBIL TANGGAL HARI INI ---
-        function getTodayDateFormats() {
+        // --- HELPER: GENERATE PATTERN TANGGAL HARI INI ---
+        function getTodayDatePatterns() {
             const now = new Date();
             const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0'); // Jan = 0
+            const monthNum = String(now.getMonth() + 1).padStart(2, '0'); // 01 - 12
             const year = now.getFullYear();
-            
-            return {
-                slash: `${day}/${month}/${year}`, // Format DD/MM/YYYY
-                dash: `${day}-${month}-${year}`,   // Format DD-MM-YYYY
-                readable: `${day}/${month}/${year}`
-            };
+
+            // Bulan Singkat Indo
+            const monthsIndo = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"];
+            // Bulan Singkat Eng (Kadang OCR baca Inggris)
+            const monthsEng = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+            const mIndo = monthsIndo[now.getMonth()];
+            const mEng = monthsEng[now.getMonth()];
+
+            return [
+                `${day} ${mIndo} ${year}`, // "06 Mei 2026"
+                `${day}-${mIndo}-${year}`, // "06-Mei-2026"
+                `${day} ${mEng} ${year}`,  // "06 May 2026" (Backup)
+                `${day}/${monthNum}/${year}`, // "06/05/2026"
+                `${day}-${monthNum}-${year}`  // "06-05-2026"
+            ];
         }
 
         // --- FILE HASHING FUNCTION ---
@@ -627,14 +640,14 @@
             }
         }
 
-        // --- OCR & VERIFICATION PROCESS CORE (UPDATED) ---
+        // --- OCR & VERIFICATION PROCESS CORE (UPDATED LOGIC) ---
         async function startVerificationProcess() {
             if (!currentFile) return;
 
             const statusBox = document.getElementById('statusBox');
             const btn = document.getElementById('verifyBtn');
             const lastVerifiedHash = localStorage.getItem(STORAGE_KEY_HASH);
-            const todayDates = getTodayDateFormats();
+            const todayDates = getTodayDatePatterns();
 
             // 1. CEK CEPAT: FILE SAMA PERSIS?
             if (currentFileHash === lastVerifiedHash) {
@@ -656,7 +669,7 @@
                 // Tahap 2: Menjalankan OCR
                 updateStatus("Membaca Teks pada Bukti Screenshot...", "loading");
                 
-                const { data: { text } } = await Tesseract.recognize(
+                const { data: { text, confidence } } = await Tesseract.recognize(
                     currentFile,
                     'eng+ind',
                     {
@@ -669,30 +682,52 @@
                 );
 
                 console.log("Hasil OCR:", text);
+                console.log("Skor Confidence:", confidence);
+
+                // --- LOGIKA BARU: CEK EDITAN ---
+                // Cek 1: Kualitas / Confidence Score
+                // Screenshot asli jernih biasanya punya confidence tinggi (> 70)
+                // Editan / Paste text / Gambar blur biasanya < 65
+                if (confidence < 65) {
+                    throw new Error("GAGAL: Terdeteksi Editan / Kualitas Rendah. Gambar tidak jelas atau hasil editan.");
+                }
+
+                // Cek 2: Panjang Data (Anti-Crop / Anti-Hapus)
+                // Bukti QRIS asli biasanya panjang teksnya > 100 karakter
+                if (text.length < 100) {
+                    throw new Error("GAGAL: Data Tidak Lengkap. Gambar terpotong atau data dihapus.");
+                }
 
                 // Tahap 3: EKSTRAKSI DATA (RRN / Tanggal)
                 const rrnMatch = text.match(/RRN\s*[:]\s*([0-9]+)/i);
                 const extractedRRN = rrnMatch ? rrnMatch[1] : "UNKNOWN";
 
-                // --- LOGIKA BARU: VALIDASI TANGGAL HARUS HARI INI ---
-                // Regex untuk menangkap format tanggal DD/MM/YYYY atau DD-MM-YYYY
+                // Cek 3: Validasi Format RRN (Ketat)
+                if (extractedRRN !== "UNKNOWN") {
+                    // RRN QRIS umumnya 12 digit. Jika panjangnya aneh, mungkin palsu.
+                    if (extractedRRN.length !== 12) {
+                        throw new Error("GAGAL: Format RRN Tidak Valid (Harus 12 Digit). Terdeteksi kecurangan data.");
+                    }
+                } else {
+                    throw new Error("GAGAL: RRN Tidak Ditemukan. Data krusial hilang, kemungkinan hasil editan.");
+                }
+
+                // --- LOGIKA: VALIDASI TANGGAL HARI INI ---
                 const dateRegex = /(\d{2})[-\/](\d{2})[-\/](\d{4})/g;
                 const foundDates = text.match(dateRegex);
                 let isDateValid = false;
 
                 if (foundDates) {
-                    // Cek apakah ada tanggal di screenshot yang cocok dengan hari ini
                     foundDates.forEach(d => {
-                        // Normalisasi separator ke slash untuk pembandingan mudah
                         const normalized = d.replace(/-/g, '/');
-                        if (normalized === todayDates.slash) {
+                        if (todayDates.includes(normalized)) {
                             isDateValid = true;
                         }
                     });
                 }
 
                 if (!isDateValid) {
-                    throw new Error(`GAGAL: Tanggal transaksi harus hari ini (${todayDates.readable}). Sistem mendeteksi tanggal lain atau tidak ditemukan.`);
+                    throw new Error(`GAGAL: Tanggal transaksi harus hari ini (${todayDates[0]}). Sistem mendeteksi tanggal lain.`);
                 }
 
                 // Tahap 4: VALIDASI KATA KUNCI (Bukti Asli)
@@ -708,13 +743,13 @@
                 const missingKeywords = requiredKeywords.filter(kw => !lowerText.includes(kw));
 
                 if (missingKeywords.length > 0) {
-                    throw new Error("Bukti Tidak Valid: Data '" + missingKeywords[0] + "' tidak ditemukan.");
+                    throw new Error("GAGAL: Data '" + missingKeywords[0] + "' tidak ditemukan.");
                 }
 
                 // Tahap 5: VALIDASI DATA BERBEDA (CEK RRN)
                 const lastData = localStorage.getItem(STORAGE_KEY_DATA);
                 if (extractedRRN !== "UNKNOWN" && lastData && extractedRRN === lastData) {
-                    throw new Error("AKSES DITOLAK: Data Transaksi (RRN) sama dengan sebelumnya.");
+                    throw new Error("GAGAL: Data Transaksi (RRN) sama dengan sebelumnya. Upload bukti transaksi baru.");
                 }
 
                 // Tahap 6: Simulasi Pengecekan Field-by-Field (Visual User)
@@ -723,7 +758,7 @@
                     "Verifikasi: Terima Pembayaran via... OK",
                     "Verifikasi: Total Terima: Rp... OK",
                     "Verifikasi: Detail Transaksi... OK",
-                    "Verifikasi: Tanggal Hari Ini (" + todayDates.readable + ")... OK",
+                    "Verifikasi: Tanggal Hari Ini (" + todayDates[0] + ")... OK",
                     "Verifikasi: Nama Merchant... OK",
                     "Verifikasi: Merchant PAN... OK",
                     "Verifikasi: ID Terminal... OK",
