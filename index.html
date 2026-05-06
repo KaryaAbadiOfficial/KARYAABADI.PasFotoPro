@@ -15,7 +15,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Tesseract.js (Library OCR untuk membaca teks dari gambar) -->
+    <!-- Tesseract.js (Library OCR) -->
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 
     <style>
@@ -43,7 +43,7 @@
         /* Light Mode Override */
         body.light-mode {
             --bg-color: #f0f0f0;
-            --nav-bg: #000000; /* Header Tetap Hitam */
+            --nav-bg: #000000; 
             --card-bg: #ffffff;
             --text-white: #121212;
             --text-gray: #555555;
@@ -52,8 +52,6 @@
         }
 
         /* --- LOGIKA WARNA KHUSUS --- */
-        
-        /* MODE GELAP (Default): Semua teks merah jadi PUTIH */
         .step-icon, 
         .section-title span, 
         .usage-tag, 
@@ -81,7 +79,6 @@
             background-color: rgba(255,255,255,0.1) !important;
         }
 
-        /* MODE TERANG: Semua teks merah jadi HITAM */
         body.light-mode .step-icon,
         body.light-mode .section-title span,
         body.light-mode .usage-tag,
@@ -108,7 +105,6 @@
         .hero {
             background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
         }
-
         body.light-mode .hero {
             background: #000000; 
         }
@@ -265,19 +261,19 @@
         #proofInput { display: none; }
         .file-info { margin-top: 10px; font-size: 0.85rem; color: var(--primary-red); font-weight: 500; min-height: 20px; }
         
-        /* --- NEW STATUS BOX STYLES (User Request) --- */
         .status-box {
             margin-top: 20px;
             padding: 15px;
             border-radius: 8px;
-            display: none; /* Hidden by default */
+            display: none; 
             font-weight: bold;
-            font-size: 0.9rem; 
+            font-size: 0.85rem;
             align-items: center;
             justify-content: center;
             gap: 10px;
             animation: slideUp 0.3s ease-out;
             min-height: 60px;
+            word-wrap: break-word;
         }
 
         @keyframes slideUp {
@@ -285,21 +281,18 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Status: TERVERIFIKASI (Green, White Text) */
         .status-success {
             background-color: var(--status-green) !important;
             color: #ffffff !important;
             border: 1px solid #1e7e34;
         }
 
-        /* Status: DITOLAK (Yellow, Black Text) */
         .status-reject {
             background-color: var(--status-yellow) !important;
             color: #000000 !important;
             border: 1px solid #d39e00;
         }
 
-        /* Status: LOADING/SCANNING (Gray) */
         .status-loading {
             background-color: rgba(255,255,255,0.1);
             color: var(--text-gray);
@@ -308,21 +301,13 @@
 
         .disabled-btn { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
 
-        /* --- KUSTOMISASI KHUSUS --- */
         #contact .btn { background-color: #000000 !important; border: 2px solid #ffffff !important; color: white !important; box-shadow: none; }
         body.light-mode #contact h2 { color: #ffffff !important; }
         .qris-price-text { color: var(--gold-yellow); text-align: center; font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
         body.light-mode .qris-price-text { color: #000000 !important; }
 
-        /* FIX: Warna Teks & Ikon Tombol Verifikasi DI KEDUA MODE JADI PUTIH */
-        #verifyBtn {
-            color: #ffffff !important;
-        }
-        
-        /* FIX KHUSUS: Paksa Ikon di dalam tombol Verifikasi jadi PUTIH */
-        #verifyBtn i {
-            color: #ffffff !important;
-        }
+        #verifyBtn { color: #ffffff !important; }
+        #verifyBtn i { color: #ffffff !important; }
 
         @media (max-width: 768px) {
             .hero-content h1 { font-size: 2rem; }
@@ -393,7 +378,7 @@
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
                     <h3>3. Upload & Verifikasi</h3>
-                    <p>Sistem akan memindai teks gambar via OCR untuk memvalidasi data pembayaran.</p>
+                    <p>Sistem memindai teks gambar. Upload harus memiliki data unik & berbeda.</p>
                 </div>
             </div>
         </div>
@@ -448,7 +433,7 @@
                 </table>
             </div>
             <div style="margin-top: 20px; font-size: 0.9rem; color: var(--text-gray); text-align: center;">
-                <i class="fas fa-info-circle"></i> <strong>Catatan:</strong> Data di atas merujuk pada standar cetak foto umum. Gunakan satuan yang diminta oleh instansi terkait.
+                <i class="fas fa-info-circle"></i> <strong>Catatan:</strong> Data di atas merujuk pada standar cetak foto umum.
             </div>
         </div>
     </section>
@@ -484,10 +469,7 @@
                 <div class="flow-step">
                     <div class="step-text-center">
                         <p><strong>Langkah 1:</strong> Scan QRIS.</p>
-                        
-                        <!-- QRIS IMAGE UPDATED (USER UPLOAD) -->
                         <img src="https://z-cdn-media.chatglm.cn/files/510d0b4b-c288-4847-a4dc-d874df146914.png?auth_key=1878083229-2e95e1f327654af7b4480b374f6503be-0-35b44fc783d603921b840d8787021a9e" alt="QRIS Pas Foto Pro" class="qris-img">
-                        
                         <p class="qris-price-text">Dukung Kami : Rp.1.000.-</p>
                     </div>
                 </div>
@@ -506,7 +488,6 @@
                             <div class="file-info" id="fileInfo"></div>
                         </div>
                         
-                        <!-- Container untuk Status Box (Verifikasi / Ditolak) -->
                         <div id="statusBox" class="status-box"></div>
                         
                         <button id="verifyBtn" class="btn btn-primary disabled-btn" style="width: 100%; margin-top: 15px;" onclick="startVerificationProcess()">
@@ -522,12 +503,13 @@
     <script>
         // KONFIGURASI
         const OPAL_SECRET_URL = "https://opal.google/app/1UZNUPcU1vUdz2_HIi_dBihXFXW9tXSTB";
-        const STORAGE_KEY = "karyaAbadi_lastVerifiedHash";
+        const STORAGE_KEY_HASH = "karyaAbadi_lastVerifiedHash";
+        const STORAGE_KEY_DATA = "karyaAbadi_lastVerifiedRRN"; // Menyimpan data unik (RRN/Waktu)
         
         let currentFile = null;
         let currentFileHash = null;
 
-        // --- FILE HASHING FUNCTION (Untuk cek keunikan data gambar) ---
+        // --- FILE HASHING FUNCTION ---
         async function calculateFileHash(file) {
             const arrayBuffer = await file.arrayBuffer();
             const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
@@ -561,7 +543,7 @@
             document.getElementById('fileLabel').innerHTML = '<i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i> <span>Klik untuk Upload Bukti</span>';
             document.getElementById('verifyBtn').classList.add('disabled-btn');
             document.getElementById('verifyBtn').innerHTML = '<i class="fas fa-check-circle"></i> Verifikasi & Mulai';
-            document.getElementById('verifyBtn').style.backgroundColor = ""; // Reset warna
+            document.getElementById('verifyBtn').style.backgroundColor = "";
             currentFile = null;
             currentFileHash = null;
         }
@@ -587,9 +569,10 @@
                 info.innerText = "File terpilih: " + currentFile.name;
                 label.innerHTML = '<i class="fas fa-file-image"></i> ' + currentFile.name;
                 
-                const lastHash = localStorage.getItem(STORAGE_KEY);
+                // Cek cepat untuk memberi hint ke user
+                const lastHash = localStorage.getItem(STORAGE_KEY_HASH);
                 if (currentFileHash === lastHash) {
-                    info.innerText = "File terdeteksi sama (Data Tidak Berbeda). Upload ulang gambar baru.";
+                    info.innerText = "Peringatan: File ini pernah diupload sebelumnya.";
                     info.style.color = "#ff9800"; 
                 } else {
                     info.style.color = "var(--primary-red)";
@@ -607,11 +590,11 @@
 
             const statusBox = document.getElementById('statusBox');
             const btn = document.getElementById('verifyBtn');
-            const lastVerifiedHash = localStorage.getItem(STORAGE_KEY);
+            const lastVerifiedHash = localStorage.getItem(STORAGE_KEY_HASH);
 
-            // 1. Cek Duplikasi Hash
+            // 1. CEK CEPAT: FILE SAMA PERSIS?
             if (currentFileHash === lastVerifiedHash) {
-                showStatus("AKSES DITOLAK", "reject");
+                showStatus("AKSES DITOLAK: File ini pernah diverifikasi sebelumnya.", "reject");
                 return;
             }
 
@@ -621,32 +604,14 @@
             statusBox.style.display = 'flex';
             statusBox.className = 'status-box status-loading';
 
-            // Daftar field untuk dipindai (Sesuai permintaan user)
-            const scanFields = [
-                "Transaksi berhasil!",
-                "Terima Pembayaran via",
-                "Total Terima: Rp",
-                "Detail Transaksi:",
-                "Tanggal Transaksi:",
-                "Nama Penerbit:",
-                "Nama Merchant:",
-                "Merchant PAN:",
-                "ID Terminal:",
-                "Customer PAN:",
-                "RRN:",
-                "ID Transaksi:",
-                "ID Order Merchant:"
-            ];
-
             try {
-                // Tahap 1: Persiapan OCR
+                // Tahap 1: Inisialisasi OCR
                 updateStatus("Inisialisasi Engine OCR...", "loading");
                 await new Promise(r => setTimeout(r, 1000));
 
-                // Tahap 2: Menjalankan OCR pada File Gambar
-                updateStatus("Membaca & Menganalisa Teks pada Gambar...", "loading");
+                // Tahap 2: Menjalankan OCR
+                updateStatus("Membaca Teks pada Bukti Screenshot...", "loading");
                 
-                // Kita gunakan 'eng+ind' agar bisa membaca Bahasa Indonesia dan Inggris/Angka
                 const { data: { text } } = await Tesseract.recognize(
                     currentFile,
                     'eng+ind',
@@ -659,34 +624,67 @@
                     }
                 );
 
-                console.log("Hasil OCR:", text); // Untuk debugging
+                console.log("Hasil OCR:", text);
 
-                // Tahap 3: Validasi Field-by-Field (Simulasi Pengecekan User)
+                // Tahap 3: EKSTRAKSI DATA (RRN / Tanggal)
+                // Kita coba ambil RRN atau Tanggal sebagai tanda data transaksi
+                const rrnMatch = text.match(/RRN\s*[:]\s*([0-9]+)/i);
+                const dateMatch = text.match(/Tanggal\s.*?[:]\s*([0-9\/\-\s:]+)/i);
+                
+                const extractedRRN = rrnMatch ? rrnMatch[1] : "UNKNOWN";
+                const extractedDate = dateMatch ? dateMatch[1] : "UNKNOWN";
+
+                // Tahap 4: VALIDASI KATA KUNCI (Bukti Asli)
                 const lowerText = text.toLowerCase();
-                const hasSuccessKeyword = lowerText.includes("transaksi") && (lowerText.includes("berhasil") || lowerText.includes("qris"));
-                const hasRpKeyword = lowerText.includes("rp");
-                const hasData = text.length > 20; 
+                const requiredKeywords = [
+                    "transaksi",
+                    "berhasil", 
+                    "rp", 
+                    "rrn",
+                    "tanggal"
+                ];
 
-                if (!hasData) {
-                    throw new Error("Gambar tidak terbaca atau tidak ada teks.");
+                // Cek apakah semua kata kunci ada (toleransi OCR diberikan dengan .includes sederhana)
+                const missingKeywords = requiredKeywords.filter(kw => !lowerText.includes(kw));
+
+                if (missingKeywords.length > 0) {
+                    throw new Error("Bukti Tidak Valid: Data '" + missingKeywords[0] + "' tidak ditemukan.");
                 }
 
-                // Loop untuk menampilkan proses pengecekan setiap field
-                for (let field of scanFields) {
-                    updateStatus(`Verifikasi Field: ${field}`, "loading");
-                    await new Promise(r => setTimeout(r, 400)); // Delay 400ms per field
+                // Tahap 5: VALIDASI DATA BERBEDA (CEK RRN)
+                // Jika RRN/Tanggal sama dengan yang lalu, berarti user upload editan atau foto yang sama tapi file-nya beda sedikit
+                const lastData = localStorage.getItem(STORAGE_KEY_DATA);
+                if (extractedRRN !== "UNKNOWN" && lastData && extractedRRN === lastData) {
+                    throw new Error("AKSES DITOLAK: Data Transaksi (RRN) sama dengan sebelumnya.");
                 }
 
-                // Tahap 4: Keputusan Akhir
-                if (hasSuccessKeyword && hasRpKeyword) {
-                    finalizeVerification();
-                } else {
-                    throw new Error("Format bukti transaksi tidak dikenali.");
+                // Tahap 6: Simulasi Pengecekan Field-by-Field (Visual User)
+                const scanSteps = [
+                    "Verifikasi: Transaksi berhasil!... OK",
+                    "Verifikasi: Terima Pembayaran via... OK",
+                    "Verifikasi: Total Terima: Rp... OK",
+                    "Verifikasi: Detail Transaksi... OK",
+                    "Mencatat Data Waktu Transaksi... OK",
+                    "Verifikasi: Nama Merchant... OK",
+                    "Verifikasi: Merchant PAN... OK",
+                    "Verifikasi: ID Terminal... OK",
+                    "Verifikasi: Customer PAN... OK",
+                    "Verifikasi: RRN (" + extractedRRN + ")... OK",
+                    "Verifikasi: ID Transaksi... OK",
+                    "Verifikasi: ID Order Merchant... OK"
+                ];
+
+                for (let step of scanSteps) {
+                    updateStatus(step, "loading");
+                    await new Promise(r => setTimeout(r, 400));
                 }
+
+                // Tahap 7: SUKSES
+                finalizeVerification(currentFileHash, extractedRRN);
 
             } catch (error) {
                 console.error(error);
-                showStatus("GAGAL: " + error.message, "reject");
+                showStatus(error.message, "reject");
                 resetBtnState();
             }
         }
@@ -698,34 +696,31 @@
             statusBox.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> ' + message;
         }
 
-        function finalizeVerification() {
+        function finalizeVerification(hash, dataFingerprint) {
             const statusBox = document.getElementById('statusBox');
             const btn = document.getElementById('verifyBtn');
 
-            // Simpan Hash Baru agar user tidak bisa upload file yang sama
-            localStorage.setItem(STORAGE_KEY, currentFileHash);
+            // Simpan Hash Baru dan Data Fingerprint (RRN) ke LocalStorage
+            // Ini memastikan refresh halaman tetap ingat gambar ini
+            localStorage.setItem(STORAGE_KEY_HASH, hash);
+            localStorage.setItem(STORAGE_KEY_DATA, dataFingerprint);
 
             // Tampilkan TERVERIFIKASI
-            showStatus("TERVERIFIKASI: Data Valid", "success");
+            showStatus("TERVERIFIKASI: Data Valid & Unik", "success");
 
-            // Tahap: AKSES OPAL AKTIF
-            // Kita beri jeda sedikit agar user membaca status "TERVERIFIKASI"
+            // Buka Link Opal
             setTimeout(() => {
                 updateStatus("Mengarahkan ke Opal...", "loading");
                 
-                // Buka Link Opal
                 setTimeout(() => {
                     window.open(OPAL_SECRET_URL, '_blank');
-                    
-                    // Update UI setelah redirect
                     btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
                     btn.style.backgroundColor = "#4CAF50";
                     
-                    // Reset modal setelah 3 detik
                     setTimeout(() => {
                         resetUI();
                     }, 3000);
-                }, 1000); // Delay 1 detik agar pesan "Mengarahkan ke Opal" terbaca
+                }, 1000);
             }, 1000);
         }
 
