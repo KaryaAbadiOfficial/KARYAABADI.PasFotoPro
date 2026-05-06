@@ -28,6 +28,9 @@
             --border-color: #333;
             --shadow: 0 4px 15px rgba(0,0,0,0.5);
             --transition: all 0.3s ease;
+            
+            /* Warna Kuning Emas */
+            --gold-yellow: #FFD700;
         }
 
         /* Light Mode Override */
@@ -47,7 +50,6 @@
         .step-icon, 
         .section-title span, 
         .usage-tag, 
-        .pro-sup, 
         .modal-content i, 
         th,
         body:not(.light-mode) .modal-content i,
@@ -78,7 +80,6 @@
         body.light-mode .step-icon,
         body.light-mode .section-title span,
         body.light-mode .usage-tag,
-        body.light-mode .pro-sup,
         body.light-mode .modal-content i,
         body.light-mode th,
         body.light-mode .file-upload-label:hover {
@@ -110,8 +111,7 @@
         body.light-mode .hero {
             background: #000000; 
         }
-        body.light-mode .hero-content h1,
-        body.light-mode .hero-content p {
+        body.light-mode .hero-content h1 {
             color: #ffffff !important;
         }
 
@@ -247,11 +247,13 @@
             line-height: 1.2;
         }
 
+        /* Override warna PRO menjadi Kuning */
         .pro-sup {
             font-size: 0.6em;
             vertical-align: super;
             font-weight: 900;
             margin-left: 2px;
+            color: var(--gold-yellow) !important;
         }
 
         .nav-links {
@@ -307,9 +309,24 @@
         }
 
         .hero-content h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
             line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        /* Style teks KUNING, TIDAK MIRING */
+        .hero-content em {
+            font-style: normal; /* Tidak miring */
+            font-size: 1.2rem;
+            color: var(--gold-yellow) !important; /* Kuning */
+            display: block;
+            margin-bottom: 30px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            text-transform: none;
         }
 
         .hero-content p {
@@ -318,6 +335,7 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            display: none; /* Hide text lama jika ada */
         }
 
         /* --- FLOW SECTION --- */
@@ -378,7 +396,7 @@
 
         th, td {
             padding: 15px;
-            text-align: center; /* RATA TENGAH SESUAI REQUEST */
+            text-align: center; /* RATA TENGAH */
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -476,6 +494,18 @@
         }
 
         /* --- FILE UPLOAD STYLES --- */
+        .example-proof-img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .file-upload-wrapper {
             margin-bottom: 15px;
         }
@@ -568,8 +598,10 @@
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="container hero-content">
-            <h1>Pas Foto Profesional<br>Softcopy Langsung Download</h1>
-            <p>Layanan pas foto digital berkualitas premium.</p>
+            <h1>PAS FOTO PROFESIONAL</h1>
+            <!-- Teks KUNING, TIDAK MIRING -->
+            <em>Layanan Pas Foto dengan Kualitas Premium.</em>
+            
             <button onclick="openModal()" class="btn btn-primary"><i class="fas fa-download"></i> Buat Foto Sekarang</button>
         </div>
     </section>
@@ -602,11 +634,10 @@
         </div>
     </section>
 
-    <!-- Size Guide Section (Updated Title & Alignment) -->
+    <!-- Size Guide Section -->
     <section id="guide" class="section-padding">
         <div class="container">
             <div class="section-title">
-                <!-- Judul diganti -->
                 <h2>Panduan <span>Ukuran Foto</span></h2>
                 <p style="color: var(--text-gray);">Standar ukuran resmi untuk dokumen administrasi dan cetak foto (CM, MM, Inci).</p>
             </div>
@@ -683,11 +714,11 @@
             </div>
             <h3>Akses Layanan Softcopy</h3>
             <p style="font-size: 0.8rem; margin-bottom: 15px; color: var(--text-gray);">
-                *Pastikan Anda memiliki screenshot bukti donasi sebelum melanjutkan.
+                *Upload bukti screenshot. Link akan aktif jika data/berkas berbeda dari sebelumnya.
             </p>
             
             <div class="step-container">
-                <!-- Step 1: Saweria -->
+                <!-- Step1: Saweria -->
                 <div class="flow-step">
                     <p style="margin-bottom: 15px;"><strong>Langkah 1:</strong> Lakukan donasi melalui Saweria.</p>
                     <a href="https://saweria.co/KaryaAbadi" target="_blank" class="btn btn-primary" style="width: 100%;">
@@ -699,18 +730,25 @@
                 <div class="flow-step">
                     <p style="margin-bottom: 15px;"><strong>Langkah 2:</strong> Upload Bukti Screenshot.</p>
                     
+                    <!-- Contoh Bukti -->
+                    <img src="https://z-cdn-media.chatglm.cn/files/0e147b45-ef4d-463c-9fd3-9dfa30615334.png?auth_key=1878042235-a09b10761c6a45aea154c77227e90bee-0-e3d56868b0a09bf1062d22c4a8008ea9" alt="Contoh Bukti Screenshot" class="example-proof-img">
+                    <p style="font-size: 0.75rem; color: var(--text-gray); margin-bottom: 15px; text-align: center;">
+                        *Contoh bukti donasi yang valid.
+                    </p>
+
                     <div class="file-upload-wrapper">
                         <label for="proofInput" class="file-upload-label" id="fileLabel">
                             <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i>
                             <span>Klik untuk Upload Bukti</span>
                         </label>
+                        <!-- accept="image/*" agar hanya menerima file gambar -->
                         <input type="file" id="proofInput" accept="image/*" onchange="updateFileDisplay()">
                         <div class="file-info" id="fileInfo"></div>
                     </div>
                     
-                    <!-- Tombol Verifikasi -->
+                    <!-- Tombol Verifikasi (Teks Diganti) -->
                     <button id="verifyBtn" class="btn btn-primary disabled-btn" style="width: 100%; margin-top: 15px;" onclick="verifyAndOpenOpal()">
-                        <i class="fas fa-check-circle"></i> Verifikasi & Buka Link Opal
+                        <i class="fas fa-check-circle"></i> Verifikasi & Mulai
                     </button>
                 </div>
             </div>
@@ -727,7 +765,8 @@
 
         function openModal() {
             modal.style.display = "flex";
-            checkDownloadLimit();
+            // Check status saat modal dibuka (untuk memastikan UI sesuai)
+            checkFileStatus();
         }
 
         function closeModal() {
@@ -740,7 +779,7 @@
             }
         }
 
-        // --- UPLOAD & VALIDATION LOGIC ---
+        // --- LOGIKA UPLOAD & DATA BERBEDA ---
 
         function updateFileDisplay() {
             const input = document.getElementById('proofInput');
@@ -749,26 +788,39 @@
             const label = document.getElementById('fileLabel');
 
             if (input.files && input.files[0]) {
-                info.innerText = "File terpilih: " + input.files[0].name;
-                label.innerHTML = '<i class="fas fa-check"></i> ' + input.files[0].name;
-                // Aktifkan tombol verifikasi
-                btn.classList.remove("disabled-btn");
+                const currentFileName = input.files[0].name;
+                
+                // Ambil nama file terakhir yang sudah diverifikasi
+                const lastVerifiedFile = localStorage.getItem('karyaAbadi_lastVerified');
+
+                // Update Tampilan Label & Info
+                info.innerText = "File terpilih: " + currentFileName;
+                label.innerHTML = '<i class="fas fa-check"></i> ' + currentFileName;
+
+                // LOGIKA PENTING: Cek apakah file berbeda
+                if (currentFileName === lastVerifiedFile) {
+                    // File SAMA -> Blokir
+                    btn.classList.add("disabled-btn");
+                    btn.style.backgroundColor = "#555"; // Warna abu-abu (disabled)
+                    info.innerText = "Mohon upload berkas/data yang berbeda.";
+                    info.style.color = "#ff9800"; // Warna oranye (peringatan)
+                } else {
+                    // File BEDA/BARU -> Izinkan
+                    btn.classList.remove("disabled-btn");
+                    btn.style.backgroundColor = ""; // Reset warna (jadi merah lagi)
+                    info.style.color = "var(--primary-red)";
+                }
+
             } else {
+                // Reset UI jika tidak ada file
                 info.innerText = "";
                 label.innerHTML = '<i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i> <span>Klik untuk Upload Bukti</span>';
                 btn.classList.add("disabled-btn");
+                btn.style.backgroundColor = "";
             }
         }
 
         function verifyAndOpenOpal() {
-            // Cek Limit Download (1 Perangkat)
-            const downloadCount = parseInt(localStorage.getItem('karyaAbadi_downloads') || '0');
-
-            if (downloadCount >= 1) {
-                alert("Anda sudah mencapai batas maksimal penggunaan akses Opal (1x per perangkat).");
-                return;
-            }
-
             // Validasi File
             const input = document.getElementById('proofInput');
             if (input.files.length === 0) {
@@ -776,57 +828,58 @@
                 return;
             }
 
+            const currentFileName = input.files[0].name;
+            const lastVerifiedFile = localStorage.getItem('karyaAbadi_lastVerified');
+
+            // Validasi Ganda: Pastikan file benar-benar berbeda saat diklik
+            if (currentFileName === lastVerifiedFile) {
+                alert("Berkas ini sudah diverifikasi sebelumnya. Silakan upload berkas yang berbeda.");
+                return;
+            }
+
             const btn = document.getElementById('verifyBtn');
             const info = document.getElementById('fileInfo');
 
-            // Simulasi Proses Validasi (Loading)
+            // Simulasi Loading
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memverifikasi...';
-            info.innerText = "Sedang memproses bukti...";
+            info.innerText = "Sedang memproses...";
 
-            // Delay 1.5 detik untuk simulasi
+            // Delay 1.5 detik
             setTimeout(() => {
-                // Proses Berhasil
+                // Simpan nama file ini sebagai "File Terakhir"
+                localStorage.setItem('karyaAbadi_lastVerified', currentFileName);
+
                 info.innerText = "Verifikasi Berhasil! Mengarahkan...";
-                info.style.color = "#4CAF50"; // Warna Hijau sukses
-                
-                // Simpan Count
-                localStorage.setItem('karyaAbadi_downloads', downloadCount + 1);
+                info.style.color = "#4CAF50"; // Hijau sukses
 
-                // Ubah Tampilan Tombol
-                btn.innerHTML = '<i class="fas fa-external-link-alt"></i> Membuka Opal...';
-                btn.classList.remove("btn-primary");
-                btn.style.backgroundColor = "#4CAF50"; // Jadi Hijau
-
-                // Buka Tab Baru Otomatis
+                // Buka Opal
                 window.open(OPAL_SECRET_URL, '_blank');
 
-                // Opsional: Reset tombol setelah beberapa detik
+                // Update UI Tombol setelah sukses
+                btn.innerHTML = '<i class="fas fa-check"></i> Selesai';
+                btn.classList.remove("btn-primary");
+                btn.style.backgroundColor = "#4CAF50";
+
+                // Reset tombol setelah 2 detik (agar siap untuk upload file baru lain)
                 setTimeout(() => {
-                    btn.innerHTML = '<i class="fas fa-check"></i> Selesai';
+                    // Teks tombol diganti menjadi "Verifikasi & Mulai"
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Verifikasi & Mulai';
+                    btn.classList.add("disabled-btn"); // Matikan sampai user upload file baru
+                    btn.classList.add("btn-primary");
+                    btn.style.backgroundColor = "";
+                    
+                    info.innerText = "Upload bukti screenshot dengan data/berkas yang berbeda untuk akses ulang.";
+                    info.style.color = "#ff9800";
                 }, 2000);
 
             }, 1500);
         }
 
-        // Cek status saat load
-        function checkDownloadLimit() {
-            const downloadCount = parseInt(localStorage.getItem('karyaAbadi_downloads') || '0');
-            const btn = document.getElementById('verifyBtn');
-            const info = document.getElementById('fileInfo');
-
-            if (downloadCount >= 1) {
-                btn.innerHTML = '<i class="fas fa-ban"></i> Akses Kadaluarsa';
-                btn.classList.add("disabled-btn");
-                btn.style.backgroundColor = "#555"; // Abu-abu
-                info.innerText = "Anda telah menggunakan kuota download.";
-                info.style.color = "var(--text-gray)";
-                
-                // Matikan Input File
-                document.getElementById('proofInput').disabled = true;
-                document.getElementById('fileLabel').style.pointerEvents = "none";
-                document.getElementById('fileLabel').style.opacity = "0.5";
-            }
+        // Fungsi cek status saat modal terbuka (untuk mengembalikan state UI)
+        function checkFileStatus() {
+            // Panggil fungsi updateFileDisplay untuk refresh UI berdasarkan input saat ini
+            updateFileDisplay();
         }
 
         // Mobile Menu Toggle
