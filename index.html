@@ -130,7 +130,7 @@
 
         /* --- UTILITIES --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .section-title { text-align: center; margin-bottom: 3rem; }
+        .section-title { text-align: center; margin-bottom:3rem; }
         .section-title h2 { font-size: 2rem; color: var(--text-white); }
         .section-title span { font-weight: 800; }
         .section-padding { padding: 80px 0; }
@@ -138,7 +138,7 @@
         .btn {
             display: inline-block;
             padding: 12px 30px;
-            border-radius: 5px;
+            border-radius:5px;
             font-weight: 600;
             text-transform: uppercase;
             cursor: pointer;
@@ -205,19 +205,18 @@
         /* --- FLOW SECTION (UPDATED) --- */
         .flow-steps {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Lebar minimal 280px agar teks panjang muat */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
             margin-bottom: 50px;
         }
         .step-card {
             background-color: var(--card-bg); padding: 30px 20px; border-radius: 10px; text-align: center;
-            border: 1px solid var(--border-color); transition: var(--transition);
+            border:1px solid var(--border-color); transition: var(--transition);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .step-card:hover { border-color: #ffffff; transform: translateY(-5px); box-shadow: var(--shadow); }
         body.light-mode .step-card:hover { border-color: #000000; }
         .step-icon { font-size: 2.5rem; margin-bottom: 20px; color: var(--primary-red); }
-        /* Override icon color for specific theme consistency if needed, but step-icon class handles it */
         
         .step-card h3 { margin-bottom: 10px; font-size: 1.1rem; line-height: 1.4; min-height: 2.8rem; display: flex; align-items: center; justify-content: center; }
         .step-card p { font-size: 0.9rem; color: var(--text-gray); line-height: 1.5; min-height: 3rem; display: flex; align-items: center; justify-content: center;}
@@ -293,7 +292,7 @@
         .status-success {
             background-color: var(--status-green) !important;
             color: #ffffff !important;
-            border: 1px solid #1e7e34;
+            border:1px solid #1e7e34;
         }
 
         .status-reject {
@@ -313,7 +312,7 @@
         /* --- KUSTOMISASI KHUSUS --- */
         #contact .btn { background-color: #000000 !important; border: 2px solid #ffffff !important; color: white !important; box-shadow: none; }
         body.light-mode #contact h2 { color: #ffffff !important; }
-        .qris-price-text { color: var(--gold-yellow); text-align: center; font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
+        .qris-price-text { color: var(--gold-yellow); text-align: center; font-weight: bold; font-size:1.1rem; margin-bottom: 5px; }
         body.light-mode .qris-price-text { color: #000000 !important; }
 
         #verifyBtn { color: #ffffff !important; }
@@ -419,7 +418,7 @@
     <section id="guide" class="section-padding">
         <div class="container">
             <div class="section-title">
-                <h2>PANDUAN<span>UKURAN FOTO</span></h2>
+                <h2>PANDUAN <span>UKURAN FOTO</span></h2>
                 <p style="color: var(--text-gray);">Standar ukuran resmi untuk dokumen administrasi dan cetak foto (CM, MM, Inci).</p>
             </div>
 
@@ -530,7 +529,7 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript Logic (UPDATED) -->
     <script>
         // KONFIGURASI
         const OPAL_SECRET_URL = "https://opal.google/app/1UZNUPcU1vUdz2_HIi_dBihXFXW9tXSTB";
@@ -539,6 +538,20 @@
         
         let currentFile = null;
         let currentFileHash = null;
+
+        // --- HELPER: AMBIL TANGGAL HARI INI ---
+        function getTodayDateFormats() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0'); // Jan = 0
+            const year = now.getFullYear();
+            
+            return {
+                slash: `${day}/${month}/${year}`, // Format DD/MM/YYYY
+                dash: `${day}-${month}-${year}`,   // Format DD-MM-YYYY
+                readable: `${day}/${month}/${year}`
+            };
+        }
 
         // --- FILE HASHING FUNCTION ---
         async function calculateFileHash(file) {
@@ -614,13 +627,14 @@
             }
         }
 
-        // --- OCR & VERIFICATION PROCESS CORE ---
+        // --- OCR & VERIFICATION PROCESS CORE (UPDATED) ---
         async function startVerificationProcess() {
             if (!currentFile) return;
 
             const statusBox = document.getElementById('statusBox');
             const btn = document.getElementById('verifyBtn');
             const lastVerifiedHash = localStorage.getItem(STORAGE_KEY_HASH);
+            const todayDates = getTodayDateFormats();
 
             // 1. CEK CEPAT: FILE SAMA PERSIS?
             if (currentFileHash === lastVerifiedHash) {
@@ -658,10 +672,28 @@
 
                 // Tahap 3: EKSTRAKSI DATA (RRN / Tanggal)
                 const rrnMatch = text.match(/RRN\s*[:]\s*([0-9]+)/i);
-                const dateMatch = text.match(/Tanggal\s.*?[:]\s*([0-9\/\-\s:]+)/i);
-                
                 const extractedRRN = rrnMatch ? rrnMatch[1] : "UNKNOWN";
-                const extractedDate = dateMatch ? dateMatch[1] : "UNKNOWN";
+
+                // --- LOGIKA BARU: VALIDASI TANGGAL HARUS HARI INI ---
+                // Regex untuk menangkap format tanggal DD/MM/YYYY atau DD-MM-YYYY
+                const dateRegex = /(\d{2})[-\/](\d{2})[-\/](\d{4})/g;
+                const foundDates = text.match(dateRegex);
+                let isDateValid = false;
+
+                if (foundDates) {
+                    // Cek apakah ada tanggal di screenshot yang cocok dengan hari ini
+                    foundDates.forEach(d => {
+                        // Normalisasi separator ke slash untuk pembandingan mudah
+                        const normalized = d.replace(/-/g, '/');
+                        if (normalized === todayDates.slash) {
+                            isDateValid = true;
+                        }
+                    });
+                }
+
+                if (!isDateValid) {
+                    throw new Error(`GAGAL: Tanggal transaksi harus hari ini (${todayDates.readable}). Sistem mendeteksi tanggal lain atau tidak ditemukan.`);
+                }
 
                 // Tahap 4: VALIDASI KATA KUNCI (Bukti Asli)
                 const lowerText = text.toLowerCase();
@@ -691,7 +723,7 @@
                     "Verifikasi: Terima Pembayaran via... OK",
                     "Verifikasi: Total Terima: Rp... OK",
                     "Verifikasi: Detail Transaksi... OK",
-                    "Mencatat Data Waktu Transaksi... OK",
+                    "Verifikasi: Tanggal Hari Ini (" + todayDates.readable + ")... OK",
                     "Verifikasi: Nama Merchant... OK",
                     "Verifikasi: Merchant PAN... OK",
                     "Verifikasi: ID Terminal... OK",
@@ -730,7 +762,7 @@
             localStorage.setItem(STORAGE_KEY_HASH, hash);
             localStorage.setItem(STORAGE_KEY_DATA, dataFingerprint);
 
-            showStatus("TERVERIFIKASI: Data Valid", "success");
+            showStatus("TERVERIFIKASI: Data Valid & Hari Ini", "success");
 
             setTimeout(() => {
                 updateStatus("Mengarahkan ke Opal...", "loading");
