@@ -552,6 +552,39 @@
             pointer-events: none;
         }
 
+        /* --- KUSTOMISASI KHUSUS (User Request) --- */
+
+        /* 1. Tombol Dukung Kami di Section Contact */
+        #contact .btn {
+            /* Default (Mode Gelap): Merah, Putih */
+            background-color: var(--primary-red) !important;
+            border: none !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+        }
+
+        /* Light Mode: Hitam, Putih */
+        body.light-mode #contact .btn {
+            background-color: #000000 !important;
+            border: none !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        /* 2. Judul CTA di Mode Terang */
+        body.light-mode #contact h2 {
+            color: #ffffff !important;
+        }
+
+        /* 3. Teks Harga QRIS di Modal (Hitam) */
+        .qris-price-text {
+            color: #000000 !important;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             .hero-content h1 { font-size: 2rem; }
@@ -606,6 +639,7 @@
             <!-- Teks KUNING, TIDAK MIRING -->
             <em>Layanan Pas Foto dengan Kualitas Premium.</em>
             
+            <!-- Buat Foto Sekarang: Mode Gelap Merah/Putih, Mode Terang Merah/Putih (Default btn-primary) -->
             <button onclick="openModal()" class="btn btn-primary"><i class="fas fa-download"></i> Buat Foto Sekarang</button>
         </div>
     </section>
@@ -695,8 +729,11 @@
     <!-- CTA / Contact Section -->
     <section id="contact" class="section-padding" style="background-color: var(--primary-red); text-align: center;">
         <div class="container">
-            <h2 style="margin-bottom: 20px;">Siap Mendapatkan Softcopy?</h2>
-            <button onclick="openModal()" class="btn btn-outline" style="border-color: white; color: white;">
+            <!-- Teks Judul Ganti + Putih di Light Mode -->
+            <h2 style="margin-bottom: 20px;">Segera dapatkan Softcopy</h2>
+            
+            <!-- Tombol Dukung Kami -->
+            <button onclick="openModal()" class="btn btn-outline">
                 <i class="fas fa-arrow-right"></i> Dukung Kami
             </button>
         </div>
@@ -717,7 +754,6 @@
                 <i class="fas fa-hand-holding-heart"></i>
             </div>
             <h3>Akses Layanan Softcopy</h3>
-            <!-- Teks instruksi upload dihapus di sini -->
             
             <div class="step-container">
                 <!-- Step 1: QRIS -->
@@ -727,12 +763,8 @@
                     <!-- Gambar QRIS -->
                     <img src="https://z-cdn-media.chatglm.cn/files/f721d913-a5b7-4ad6-8502-4b03c901d262.png?auth_key=1878048310-c4a42395620c450f86fd02da54fb7eb9-0-ddf4f049f09ac0a358be0e49cdf9638c" alt="QRIS Pas Foto Pro" class="qris-img">
                     
-                    <!-- Teks Harga -->
-                    <p style="text-align: center; font-weight: bold; color: var(--gold-yellow); font-size: 1.1rem; margin-bottom: 5px;">
-                        Dukung Kami : Cuma dengan Rp.1.000.-
-                    </p>
-                    
-                    <!-- Teks ucapan terima kasih dihapus di sini -->
+                    <!-- Teks Harga Warna Hitam -->
+                    <p class="qris-price-text">Dukung Kami : Cuma dengan Rp.1.000.-</p>
                 </div>
 
                 <!-- Step 2: Upload Proof -->
@@ -749,7 +781,7 @@
                         <div class="file-info" id="fileInfo"></div>
                     </div>
                     
-                    <!-- Tombol Verifikasi -->
+                    <!-- Tombol Verifikasi (Verifikasi & Mulai: Merah/Putih default) -->
                     <button id="verifyBtn" class="btn btn-primary disabled-btn" style="width: 100%; margin-top: 15px;" onclick="verifyAndOpenOpal()">
                         <i class="fas fa-check-circle"></i> Verifikasi & Mulai
                     </button>
@@ -914,129 +946,5 @@
             });
         });
     </script>
-    <script>
-(function () {
-  let adClosed = false;
-
-  function createAd() {
-    if (adClosed) return;
-    if (document.getElementById("anchorAd")) return;
-
-    const ad = document.createElement("div");
-    ad.id = "anchorAd";
-
-    ad.innerHTML = `
-      <div class="ad-box">
-        <span class="close-btn">✕</span>
-
-        <a href="https://monetag.com/?ref_id=ttxJ" target="_blank">
-          <img src="https://latestlogo.com/wp-content/uploads/2024/03/monetag.png" class="logo"/>
-        </a>
-
-        <div class="text1">Hasilkan Uang dari Internet</div>
-        <div class="text2">CUMA MODAL HP</div>
-
-        <a href="https://omg10.com/4/10633681" target="_blank" class="btn">
-          MULAI
-        </a>
-      </div>
-    `;
-
-    document.body.appendChild(ad);
-
-    ad.querySelector(".close-btn").onclick = function () {
-      ad.remove();
-      adClosed = true;
-    };
-  }
-
-  setInterval(createAd, 10000);
-
-  const style = document.createElement("style");
-  style.innerHTML = `
-    #anchorAd {
-      position: fixed;
-      bottom: 10px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      z-index: 9999;
-      animation: slideUp 0.4s ease;
-    }
-
-    .ad-box {
-      background: #ffffff;
-      color: #000;
-      width: 90%;
-      max-width: 420px;
-      padding: 15px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      position: relative;
-    }
-
-    /* LOGO DIPERBESAR */
-    .logo {
-      width: 140px;
-      max-width: 70%;
-      margin-bottom: 10px;
-    }
-
-    .text1 {
-      font-weight: bold;
-      font-size: 16px;
-      margin-bottom: 4px;
-    }
-
-    .text2 {
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    .btn {
-      display: inline-block;
-      background: #FFD700;
-      color: #000;
-      font-weight: bold;
-      padding: 10px 22px;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: #ffcc00;
-      transform: scale(1.05);
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 6px;
-      right: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      color: #333;
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(80px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-      .logo {
-        width: 120px;
-      }
-      .text1 { font-size: 14px; }
-      .text2 { font-size: 13px; }
-    }
-  `;
-
-  document.head.appendChild(style);
-})();
-</script>
 </body>
 </html>
