@@ -18,7 +18,7 @@
         /* --- CSS VARIABLES & THEMES --- */
         :root {
             /* Default Dark Theme */
-            --primary-red: #D32F2F; /* Hanya referensi, tapi akan di-override di bawah */
+            --primary-red: #D32F2F; 
             --accent-red: #ff4d4d;
             --bg-color: #000000; 
             --nav-bg: #000000; 
@@ -41,7 +41,7 @@
             --shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        /* --- LOGIKA WARNA KHUSUS (USER REQUEST) --- */
+        /* --- LOGIKA WARNA KHUSUS --- */
         
         /* MODE GELAP (Default): Semua teks merah jadi PUTIH */
         .step-icon, 
@@ -88,9 +88,9 @@
             background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
         }
 
-        /* Hero di Mode Terang: Teks JADI PUTIH, Background Tetap HITAM (Agar teks putih terbaca) */
+        /* Hero di Mode Terang: Teks JADI PUTIH, Background Tetap HITAM */
         body.light-mode .hero {
-            background: #000000; /* Force Hitam */
+            background: #000000; 
         }
         body.light-mode .hero-content h1,
         body.light-mode .hero-content p {
@@ -148,7 +148,7 @@
         }
 
         .btn-primary {
-            background-color: var(--primary-red); /* Tombol tetap merah */
+            background-color: var(--primary-red);
             color: white;
             box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
         }
@@ -187,7 +187,7 @@
         /* Span di judul ikut logika warna (Putih/Hitam) */
         .section-title span {
             /* Color handled by global logic above */
-            font-weight: 800; /* Make it pop */
+            font-weight: 800; 
         }
 
         .section-padding {
@@ -253,7 +253,7 @@
         }
 
         .nav-links a:hover {
-            color: #ffffff; /* Hover tetap putih bersih */
+            color: #ffffff; 
         }
 
         .theme-toggle-item {
@@ -323,12 +323,12 @@
         }
 
         .step-card:hover {
-            border-color: #ffffff; /* Border hover jadi putih agar terlihat di hitam */
+            border-color: #ffffff; 
             transform: translateY(-5px);
             box-shadow: var(--shadow);
         }
         body.light-mode .step-card:hover {
-            border-color: #000000; /* Border hover jadi hitam di light mode */
+            border-color: #000000; 
         }
 
         .step-icon {
@@ -347,7 +347,7 @@
             color: var(--text-gray);
         }
 
-        /* --- SIZE GUIDE TABLE --- */
+        /* --- SIZE GUIDE TABLE (PDF DATA STYLE) --- */
         .table-responsive {
             overflow-x: auto;
             background-color: var(--card-bg);
@@ -358,14 +358,18 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 900px; /* Lebar karena datanya lengkap */
+            min-width: 800px;
+            font-size: 0.9rem;
         }
 
         th, td {
-            padding: 12px 10px;
-            text-align: left;
+            padding: 15px;
+            text-align: center; /* Center align for dimensions */
             border-bottom: 1px solid var(--border-color);
-            font-size: 0.85rem;
+        }
+        
+        th:first-child, td:first-child {
+            text-align: left; /* Align name left */
         }
 
         th {
@@ -481,7 +485,7 @@
         .checkbox-wrapper input {
             width: 20px;
             height: 20px;
-            accent-color: var(--primary-red); /* Input check tetap merah agar jelas */
+            accent-color: var(--primary-red); 
             cursor: pointer;
         }
 
@@ -543,7 +547,8 @@
     <section id="home" class="hero">
         <div class="container hero-content">
             <h1>Pas Foto Profesional<br>Softcopy Langsung Download</h1>
-            <p>Layanan pas foto digital berkualitas tinggi. Proses otomatis, hasil bisa diunduh langsung dalam hitungan detik.</p>
+            <!-- Updated Text -->
+            <p>Layanan pas foto digital berkualitas premium.</p>
             <button onclick="openModal()" class="btn btn-primary"><i class="fas fa-download"></i> Buat Foto Sekarang</button>
         </div>
     </section>
@@ -558,7 +563,7 @@
 
             <div class="flow-steps">
                 <div class="step-card">
-                    <!-- Ikon Mouse Pointer (Lebih Rapat) -->
+                    <!-- Ikon Mouse Pointer -->
                     <div class="step-icon"><i class="fas fa-mouse-pointer"></i></div>
                     <h3>1. Klik Buat</h3>
                     <p>Tekan tombol "Buat Foto Sekarang" untuk memulai proses dukungan.</p>
@@ -577,175 +582,57 @@
         </div>
     </section>
 
-    <!-- Size Guide Section (Expanded Data) -->
+    <!-- Size Guide Section (PDF Data) -->
     <section id="guide" class="section-padding">
         <div class="container">
             <div class="section-title">
-                <h2>Panduan <span>Ukuran Pas Foto Paling Lengkap</span></h2>
-                <p style="color: var(--text-gray);">Standar ukuran resmi untuk dokumen administrasi dan cetak foto di Indonesia.</p>
+                <h2>Panduan <span>Ukuran Pas Foto Lengkap</span></h2>
+                <p style="color: var(--text-gray);">Standar ukuran resmi untuk dokumen administrasi dan cetak foto (CM, MM, Inci).</p>
             </div>
 
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 15%;">Nama Ukuran</th>
-                            <th style="width: 10%;">Dimensi (cm)</th>
-                            <th style="width: 10%;">Dimensi (mm)</th>
-                            <th style="width: 15%;">Resolusi (300 DPI)</th>
-                            <th style="width: 15%;">Resolusi (72 DPI)</th>
-                            <th style="width: 35%;">Kegunaan Umum</th>
+                            <th style="width: 25%;">Nama Ukuran</th>
+                            <th style="width: 25%;">Dimensi (CM)</th>
+                            <th style="width: 25%;">Dimensi (MM)</th>
+                            <th style="width: 25%;">Dimensi (INCI)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Dokumen Kecil -->
-                        <tr>
-                            <td><strong>1.5 x 2</strong><br><span style="font-size:0.7em; color:var(--text-gray)">SIM Colokan</span></td>
-                            <td>1.5 x 2</td>
-                            <td>15 x 20</td>
-                            <td>177 x 236 px</td>
-                            <td>43 x 57 px</td>
-                            <td>
-                                <span class="usage-tag">SIM Colokan</span>
-                                <span class="usage-tag">Kartu Nama</span>
-                                <span class="usage-tag">ID Card Kecil</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>2 x 2</strong><br><span style="font-size:0.7em; color:var(--text-gray)">Square</span></td>
-                            <td>2 x 2</td>
-                            <td>20 x 20</td>
-                            <td>236 x 236 px</td>
-                            <td>57 x 57 px</td>
-                            <td>
-                                <span class="usage-tag">Paspor Indonesia</span>
-                                <span class="usage-tag">Visa Amerika/China</span>
-                                <span class="usage-tag">Tiket Kereta</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>2 x 3</strong><br><span style="font-size:0.7em; color:var(--text-gray)">2R</span></td>
-                            <td>2 x 3</td>
-                            <td>20 x 30</td>
-                            <td>236 x 354 px</td>
-                            <td>57 x 85 px</td>
-                            <td>
-                                <span class="usage-tag">Kartu Pelajar</span>
-                                <span class="usage-tag">Rapor</span>
-                                <span class="usage-tag">KTM</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>2.5 x 3.5</strong><br><span style="font-size:0.7em; color:var(--text-gray)">US Visa</span></td>
-                            <td>2.5 x 3.5</td>
-                            <td>25 x 35</td>
-                            <td>295 x 413 px</td>
-                            <td>71 x 99 px</td>
-                            <td>
-                                <span class="usage-tag">Visa Schengen</span>
-                                <span class="usage-tag">Visa Jepang</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>3 x 4</strong><br><span style="font-size:0.7em; color:var(--text-gray)">3R</span></td>
-                            <td>3 x 4</td>
-                            <td>30 x 40</td>
-                            <td>354 x 472 px</td>
-                            <td>85 x 113 px</td>
-                            <td>
-                                <span class="usage-tag">Lamaran Kerja (CV)</span>
-                                <span class="usage-tag">NPWP</span>
-                                <span class="usage-tag">SIM A/C</span>
-                                <span class="usage-tag">BPJS</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>3.5 x 4.5</strong><br><span style="font-size:0.7em; color:var(--text-gray)">Sertifikat</span></td>
-                            <td>3.5 x 4.5</td>
-                            <td>35 x 45</td>
-                            <td>413 x 531 px</td>
-                            <td>99 x 127 px</td>
-                            <td>
-                                <span class="usage-tag">Sertifikat Dokter</span>
-                                <span class="usage-tag">Ijazah Akademi</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>4 x 6</strong><br><span style="font-size:0.7em; color:var(--text-gray)">4R</span></td>
-                            <td>4 x 6</td>
-                            <td>40 x 60</td>
-                            <td>472 x 709 px</td>
-                            <td>113 x 170 px</td>
-                            <td>
-                                <span class="usage-tag">Ijazah Umum</span>
-                                <span class="usage-tag">Sertifikat</span>
-                                <span class="usage-tag">Pendaftaran CPNS</span>
-                                <span class="usage-tag">Kartu Keluarga</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>4 x 4</strong><br><span style="font-size:0.7em; color:var(--text-gray)">Square</span></td>
-                            <td>4 x 4</td>
-                            <td>40 x 40</td>
-                            <td>472 x 472 px</td>
-                            <td>113 x 113 px</td>
-                            <td>
-                                <span class="usage-tag">Instagram (Old)</span>
-                                <span class="usage-tag">Arsip Foto</span>
-                                <span class="usage-tag">Aplikasi Tukar Poin</span>
-                            </td>
-                        </tr>
-                        <!-- Cetak Foto Standar -->
-                        <tr>
-                            <td><strong>Wallet</strong><br><span style="font-size:0.7em; color:var(--text-gray)">3R (Landscape)</span></td>
-                            <td>8.9 x 12.7</td>
-                            <td>89 x 127</td>
-                            <td>1051 x 1500 px</td>
-                            <td>252 x 360 px</td>
-                            <td>
-                                <span class="usage-tag">Cetak Foto Standar</span>
-                                <span class="usage-tag">Dompet</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>4R</strong><br><span style="font-size:0.7em; color:var(--text-gray)">10R</span></td>
-                            <td>10.2 x 15.2</td>
-                            <td>102 x 152</td>
-                            <td>1205 x 1795 px</td>
-                            <td>289 x 431 px</td>
-                            <td>
-                                <span class="usage-tag">Cetak Album</span>
-                                <span class="usage-tag">Frame Standar</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>5R</strong><br><span style="font-size:0.7em; color:var(--text-gray)">5x7 Inch</span></td>
-                            <td>12.7 x 17.8</td>
-                            <td>127 x 178</td>
-                            <td>1500 x 2102 px</td>
-                            <td>360 x 504 px</td>
-                            <td>
-                                <span class="usage-tag">Cetak Lukisan</span>
-                                <span class="usage-tag">Poster Kecil</span>
-                            </td>
-                        </tr>
-                         <tr>
-                            <td><strong>A4</strong><br><span style="font-size:0.7em; color:var(--text-gray)">Kertas Dokumen</span></td>
-                            <td>21.0 x 29.7</td>
-                            <td>210 x 297</td>
-                            <td>2480 x 3508 px</td>
-                            <td>595 x 842 px</td>
-                            <td>
-                                <span class="usage-tag">Scan Dokumen</span>
-                                <span class="usage-tag">Portofolio</span>
-                                <span class="usage-tag">Makalah</span>
-                            </td>
-                        </tr>
+                        <!-- Data dari PDF -->
+                        <tr><td><strong>Pas Foto 2×3</strong></td><td>2.16 × 2.79</td><td>21.6 × 27.9</td><td>0.85 × 1.11</td></tr>
+                        <tr><td><strong>Pas Foto 3×4</strong></td><td>2.79 × 3.81</td><td>27.9 × 38.1</td><td>1.11 × 1.50</td></tr>
+                        <tr><td><strong>Pas Foto 4×6</strong></td><td>3.81 × 5.59</td><td>38.1 × 55.9</td><td>1.50 × 2.20</td></tr>
+                        <tr><td><strong>Foto 1R</strong></td><td>5.00 × 7.50</td><td>50.0 × 75.0</td><td>1.96 × 2.95</td></tr>
+                        <tr><td><strong>Foto 2R</strong></td><td>6.35 × 8.89</td><td>63.5 × 88.9</td><td>2.50 × 3.50</td></tr>
+                        <tr><td><strong>Foto 3R</strong></td><td>8.89 × 12.7</td><td>88.9 × 127.0</td><td>3.50 × 5.00</td></tr>
+                        <tr><td><strong>Foto 4R</strong></td><td>10.2 × 15.2</td><td>102.0 × 152.0</td><td>4.00 × 6.00</td></tr>
+                        <tr><td><strong>Foto 5R</strong></td><td>12.7 × 17.8</td><td>127.0 × 178.0</td><td>5.00 × 7.00</td></tr>
+                        <tr><td><strong>Foto 6R</strong></td><td>15.2 × 20.3</td><td>152.0 × 203.0</td><td>6.00 × 8.00</td></tr>
+                        <tr><td><strong>Foto 8R</strong></td><td>20.3 × 25.4</td><td>203.0 × 254.0</td><td>8.00 × 10.0</td></tr>
+                        <tr><td><strong>Foto 8R+</strong></td><td>20.3 × 30.5</td><td>203.0 × 305.0</td><td>8.00 × 12.0</td></tr>
+                        <tr><td><strong>Foto 10R</strong></td><td>25.4 × 30.5</td><td>254.0 × 305.0</td><td>10.0 × 12.0</td></tr>
+                        <tr><td><strong>Foto 10R+</strong></td><td>25.4 × 38.1</td><td>254.0 × 381.0</td><td>10.0 × 15.0</td></tr>
+                        <tr><td><strong>Foto 11R</strong></td><td>27.9 × 35.6</td><td>279.0 × 356.0</td><td>11.0 × 14.0</td></tr>
+                        <tr><td><strong>Foto 11R+</strong></td><td>27.9 × 43.2</td><td>279.0 × 432.0</td><td>11.0 × 17.0</td></tr>
+                        <tr><td><strong>Foto 12R</strong></td><td>30.5 × 38.1</td><td>305.0 × 381.0</td><td>12.0 × 15.0</td></tr>
+                        <tr><td><strong>Foto 12R+</strong></td><td>30.5 × 45.7</td><td>305.0 × 457.0</td><td>12.0 × 18.0</td></tr>
+                        <tr><td><strong>Foto 14R</strong></td><td>35.5 × 43.1</td><td>355.0 × 431.0</td><td>14.0 × 17.0</td></tr>
+                        <tr><td><strong>Foto 16R</strong></td><td>40.6 × 50.8</td><td>406.0 × 508.0</td><td>16.0 × 20.0</td></tr>
+                        <tr><td><strong>Foto 16R+</strong></td><td>40.6 × 60.9</td><td>406.0 × 609.0</td><td>16.0 × 24.0</td></tr>
+                        <tr><td><strong>Foto 20R</strong></td><td>50.8 × 60.9</td><td>508.0 × 609.0</td><td>20.0 × 24.0</td></tr>
+                        <tr><td><strong>Foto 20R+</strong></td><td>50.8 × 71.1</td><td>508.0 × 711.0</td><td>20.0 × 28.0</td></tr>
+                        <tr><td><strong>Foto 22R</strong></td><td>50.8 × 74.9</td><td>508.0 × 749.0</td><td>20.0 × 29.5</td></tr>
+                        <tr><td><strong>Foto 24R</strong></td><td>60.9 × 80.0</td><td>609.0 × 800.0</td><td>24.0 × 31.5</td></tr>
+                        <tr><td><strong>Foto 24R+</strong></td><td>60.9 × 90.1</td><td>609.0 × 901.0</td><td>24.0 × 35.5</td></tr>
+                        <tr><td><strong>Foto 30R</strong></td><td>76.2 × 101.6</td><td>762.0 × 1016.0</td><td>30.0 × 40.0</td></tr>
                     </tbody>
                 </table>
             </div>
             <div style="margin-top: 20px; font-size: 0.9rem; color: var(--text-gray); text-align: center;">
-                <i class="fas fa-info-circle"></i> <strong>Catatan:</strong> Wajah harus menempati 70-80% frame. Gunakan latar belakang putih/merah/biru sesuai aturan instansi.
+                <i class="fas fa-info-circle"></i> <strong>Catatan:</strong> Data di atas merujuk pada standar cetak foto umum. Gunakan satuan yang diminta oleh instansi terkait.
             </div>
         </div>
     </section>
