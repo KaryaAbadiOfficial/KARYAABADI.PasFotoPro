@@ -272,7 +272,7 @@
             border-radius: 8px;
             display: none; /* Hidden by default */
             font-weight: bold;
-            font-size: 0.9rem; /* Sedikit lebih kecil agar muat teks panjang */
+            font-size: 0.9rem; 
             align-items: center;
             justify-content: center;
             gap: 10px;
@@ -561,6 +561,7 @@
             document.getElementById('fileLabel').innerHTML = '<i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i> <span>Klik untuk Upload Bukti</span>';
             document.getElementById('verifyBtn').classList.add('disabled-btn');
             document.getElementById('verifyBtn').innerHTML = '<i class="fas fa-check-circle"></i> Verifikasi & Mulai';
+            document.getElementById('verifyBtn').style.backgroundColor = ""; // Reset warna
             currentFile = null;
             currentFileHash = null;
         }
@@ -569,6 +570,7 @@
             const btn = document.getElementById('verifyBtn');
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-check-circle"></i> Verifikasi & Mulai';
+            btn.style.backgroundColor = "";
         }
 
         // --- HANDLE FILE SELECTION ---
@@ -638,7 +640,7 @@
 
             try {
                 // Tahap 1: Persiapan OCR
-                updateStatus("Inisialisasi Engine OCR (Tesseract.js)...", "loading");
+                updateStatus("Inisialisasi Engine OCR...", "loading");
                 await new Promise(r => setTimeout(r, 1000));
 
                 // Tahap 2: Menjalankan OCR pada File Gambar
@@ -657,14 +659,13 @@
                     }
                 );
 
-                console.log("Hasil OCR:", text); // Untuk debugging di console browser
+                console.log("Hasil OCR:", text); // Untuk debugging
 
                 // Tahap 3: Validasi Field-by-Field (Simulasi Pengecekan User)
-                // Kita cek apakah teks dari OCR mengandung kata kunci dasar
                 const lowerText = text.toLowerCase();
                 const hasSuccessKeyword = lowerText.includes("transaksi") && (lowerText.includes("berhasil") || lowerText.includes("qris"));
                 const hasRpKeyword = lowerText.includes("rp");
-                const hasData = text.length > 20; // Pastikan bukan gambar kosong
+                const hasData = text.length > 20; 
 
                 if (!hasData) {
                     throw new Error("Gambar tidak terbaca atau tidak ada teks.");
@@ -677,12 +678,9 @@
                 }
 
                 // Tahap 4: Keputusan Akhir
-                // Karena client-side tidak bisa akses bank, kita gunakan heuristic:
-                // Jika ada teks, ada kata "Transaksi" dan "Rp" / "QRIS", kita anggap format bukti transfer valid.
                 if (hasSuccessKeyword && hasRpKeyword) {
                     finalizeVerification();
                 } else {
-                    // Jika teks terbaca tapi formatnya aneh (misal foto random)
                     throw new Error("Format bukti transaksi tidak dikenali.");
                 }
 
@@ -710,15 +708,24 @@
             // Tampilkan TERVERIFIKASI
             showStatus("TERVERIFIKASI: Data Valid", "success");
 
-            // Buka Link Opal
+            // Tahap: AKSES OPAL AKTIF
+            // Kita beri jeda sedikit agar user membaca status "TERVERIFIKASI"
             setTimeout(() => {
-                window.open(OPAL_SECRET_URL, '_blank');
-                btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
-                btn.style.backgroundColor = "#4CAF50";
+                updateStatus("Mengarahkan ke Opal...", "loading");
                 
+                // Buka Link Opal
                 setTimeout(() => {
-                    resetUI();
-                }, 3000);
+                    window.open(OPAL_SECRET_URL, '_blank');
+                    
+                    // Update UI setelah redirect
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
+                    btn.style.backgroundColor = "#4CAF50";
+                    
+                    // Reset modal setelah 3 detik
+                    setTimeout(() => {
+                        resetUI();
+                    }, 3000);
+                }, 1000); // Delay 1 detik agar pesan "Mengarahkan ke Opal" terbaca
             }, 1000);
         }
 
