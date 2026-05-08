@@ -243,6 +243,8 @@
             background-color: var(--card-bg); margin: auto; padding: 40px; border: 1px solid var(--border-color);
             border-radius: 10px; width: 90%; max-width: 500px; text-align: center; position: relative;
             animation: modalFade 0.4s; box-shadow: 0 0 20px rgba(211, 47, 47, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         @keyframes modalFade { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
         .close-modal { position: absolute; top: 15px; right: 20px; color: var(--text-gray); font-size: 28px; font-weight: bold; cursor: pointer; }
@@ -308,6 +310,57 @@
         }
 
         .disabled-btn { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+        /* --- FORMULIR STYLES (BARU) --- */
+        #orderFormStep {
+            display: none; /* Hidden initially */
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-white);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: rgba(255,255,255,0.05);
+            color: var(--text-white);
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+        }
+
+        body.light-mode .form-control {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+        }
 
         /* --- KUSTOMISASI KHUSUS --- */
         #contact .btn { background-color: #000000 !important; border: 2px solid #ffffff !important; color: white !important; box-shadow: none; }
@@ -576,50 +629,107 @@
     <div id="paymentModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <div style="color: var(--primary-red); font-size: 3rem; margin-bottom: 15px;">
-                <i class="fas fa-hand-holding-heart"></i>
-            </div>
-            <h3>Akses Layanan Kami</h3>
             
-            <div class="step-container">
-                <!-- Step 1: QRIS -->
-                <div class="flow-step">
-                    <div class="step-text-center">
-                        <p><strong>Langkah 1:</strong> Scan QRIS via BANK dan via DANA.</p>
-                        
-                        <!-- QRIS IMAGE -->
-                        <img src="https://z-cdn-media.chatglm.cn/files/5a05ede0-b812-4ad2-bbad-fa022fc5b42a.png?auth_key=1878102707-48fc6dd3fed44155b02bdfcb99ecf4f0-0-37c4428294b7205f4405e727b35eba07" alt="QRIS Pas Foto Pro" class="qris-img">
-                        
-                        <p class="qris-price-text">Dukung Kami : Rp.1.000.-</p>
-                    </div>
+            <!-- STEP 1 & 2: VERIFICATION (INITIAL) -->
+            <div id="verificationStep">
+                <div style="color: var(--primary-red); font-size: 3rem; margin-bottom: 15px;">
+                    <i class="fas fa-hand-holding-heart"></i>
                 </div>
-
-                <!-- Step 2: Upload & Verify -->
-                <div class="flow-step">
-                    <div class="step-text-center">
-                        <p><strong>Langkah 2:</strong> Upload Bukti Screenshot.</p>
-
-                        <div class="file-upload-wrapper">
-                            <label for="proofInput" class="file-upload-label" id="fileLabel">
-                                <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i>
-                                <span>Klik untuk Upload Bukti</span>
-                            </label>
-                            <input type="file" id="proofInput" accept="image/*" onchange="handleFileSelection()">
-                            <div class="file-info" id="fileInfo"></div>
+                <h3>Akses Layanan Kami</h3>
+                
+                <div class="step-container">
+                    <!-- Step 1: QRIS -->
+                    <div class="flow-step">
+                        <div class="step-text-center">
+                            <p><strong>Langkah 1:</strong> Scan QRIS via BANK dan via DANA.</p>
+                            
+                            <!-- QRIS IMAGE -->
+                            <img src="https://z-cdn-media.chatglm.cn/files/5a05ede0-b812-4ad2-bbad-fa022fc5b42a.png?auth_key=1878102707-48fc6dd3fed44155b02bdfcb99ecf4f0-0-37c4428294b7205f4405e727b35eba07" alt="QRIS Pas Foto Pro" class="qris-img">
+                            
+                            <p class="qris-price-text">Dukung Kami : Rp.1.000.-</p>
                         </div>
-                        
-                        <div id="statusBox" class="status-box"></div>
-                        
-                        <button id="verifyBtn" class="btn btn-primary disabled-btn" style="width: 100%; margin-top: 15px;" onclick="startVerificationProcess()">
-                            <i class="fas fa-check-circle"></i> Verifikasi & Mulai
-                        </button>
+                    </div>
+
+                    <!-- Step 2: Upload & Verify -->
+                    <div class="flow-step">
+                        <div class="step-text-center">
+                            <p><strong>Langkah 2:</strong> Upload Bukti Screenshot.</p>
+
+                            <div class="file-upload-wrapper">
+                                <label for="proofInput" class="file-upload-label" id="fileLabel">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem;"></i>
+                                    <span>Klik untuk Upload Bukti</span>
+                                </label>
+                                <input type="file" id="proofInput" accept="image/*" onchange="handleFileSelection()">
+                                <div class="file-info" id="fileInfo"></div>
+                            </div>
+                            
+                            <div id="statusBox" class="status-box"></div>
+                            
+                            <button id="verifyBtn" class="btn btn-primary disabled-btn" style="width: 100%; margin-top: 15px;" onclick="startVerificationProcess()">
+                                <i class="fas fa-check-circle"></i> Verifikasi & Mulai
+                            </button>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- STEP 3: ORDER FORM (AFTER VERIFICATION) -->
+            <div id="orderFormStep">
+                <div style="color: var(--status-green); font-size: 3rem; margin-bottom: 15px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Isi Detail Pesanan</h3>
+                <p style="color: var(--text-gray); margin-bottom: 20px;">Terima kasih! Bukti pembayaran Anda valid. Silakan lengkapi formulir di bawah ini.</p>
+
+                <form id="orderForm" onsubmit="event.preventDefault(); submitToWhatsApp();">
+                    
+                    <!-- 1. Upload Foto -->
+                    <div class="form-group">
+                        <label class="form-label">1. Upload Foto Anda</label>
+                        <div class="file-upload-wrapper">
+                            <label for="userPhoto" class="file-upload-label" id="userPhotoLabel">
+                                <i class="fas fa-camera" style="font-size: 1.5rem;"></i>
+                                <span>Pilih Foto Pas Foto...</span>
+                            </label>
+                            <input type="file" id="userPhoto" accept="image/*" onchange="updateUserPhotoLabel()">
+                        </div>
+                    </div>
+
+                    <!-- 2. Pilihan Model -->
+                    <div class="form-group">
+                        <label class="form-label">2. Pilihan Model (Ketik/Pilih)</label>
+                        <select id="modelOption" class="form-control">
+                            <option value="" disabled selected>-- Pilih Model --</option>
+                            <option value="Kemeja putih polos pria">Kemeja putih polos pria</option>
+                            <option value="Kemeja putih Polos wanita">Kemeja putih Polos wanita</option>
+                            <option value="Kemeja putih Polos wanita dengan hijab hitam">Kemeja putih Polos wanita dengan hijab hitam</option>
+                            <option value="Jas dengan dasi hitam pria">Jas dengan dasi hitam pria</option>
+                            <option value="Jas dengan dasi hitam wanita">Jas dengan dasi hitam wanita</option>
+                            <option value="Jas dengan dasi hitam memakai hijab hitam">Jas dengan dasi hitam memakai hijab hitam</option>
+                        </select>
+                    </div>
+
+                    <!-- 3. Pilihan Background -->
+                    <div class="form-group">
+                        <label class="form-label">3. Pilihan Background</label>
+                        <select id="bgOption" class="form-control">
+                            <option value="Merah">Merah</option>
+                            <option value="Biru">Biru</option>
+                            <option value="Putih">Putih</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Kirim ke WhatsApp
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Logic (FINAL TIME & ID LOGIC) -->
+    <!-- JavaScript Logic (FINAL WA INTEGRATION) -->
     <script>
         // ==========================================
         // 1. LOGIKA IKLAN (FIXED LEFT & RIGHT)
@@ -699,12 +809,12 @@
 
 
         // ==========================================
-        // 2. LOGIKA WEBSITE UTAMA (FINAL OCR)
+        // 2. LOGIKA WEBSITE UTAMA (FINAL OCR + FORM)
         // ==========================================
         
-        const OPAL_SECRET_URL = "https://opal.google/app/1UZNUPcU1vUdz2_HIi_dBihXFXW9tXSTB";
+        // const OPAL_SECRET_URL = "https://opal.google/app/1UZNUPcU1vUdz2_HIi_dBihXFXW9tXSTB"; // REMOVED
         const STORAGE_KEY_HASH = "karyaAbadi_lastVerifiedHash";
-        const STORAGE_KEY_DATA = "karyaAbadi_lastVerifiedUnique"; // Storage for Time+ID
+        const STORAGE_KEY_DATA = "karyaAbadi_lastVerifiedUnique"; 
         
         let currentFile = null;
         let currentFileHash = null;
@@ -754,6 +864,7 @@
         }
 
         function resetUI() {
+            // Reset Verification Step
             document.getElementById('proofInput').value = '';
             document.getElementById('fileInfo').innerText = '';
             document.getElementById('statusBox').style.display = 'none';
@@ -762,6 +873,15 @@
             document.getElementById('verifyBtn').classList.add('disabled-btn');
             document.getElementById('verifyBtn').innerHTML = '<i class="fas fa-check-circle"></i> Verifikasi & Mulai';
             document.getElementById('verifyBtn').style.backgroundColor = "";
+            
+            // Reset Form Step Visibility
+            document.getElementById('verificationStep').style.display = 'block';
+            document.getElementById('orderFormStep').style.display = 'none';
+
+            // Reset Form Values
+            document.getElementById('orderForm').reset();
+            document.getElementById('userPhotoLabel').innerHTML = '<i class="fas fa-camera" style="font-size: 1.5rem;"></i> <span>Pilih Foto Pas Foto...</span>';
+
             currentFile = null;
             currentFileHash = null;
         }
@@ -771,6 +891,15 @@
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-check-circle"></i> Verifikasi & Mulai';
             btn.style.backgroundColor = "";
+        }
+
+        function updateUserPhotoLabel() {
+            const input = document.getElementById('userPhoto');
+            const label = document.getElementById('userPhotoLabel');
+            if (input.files && input.files[0]) {
+                label.innerHTML = '<i class="fas fa-check"></i> ' + input.files[0].name;
+                label.style.color = "var(--status-green)";
+            }
         }
 
         async function handleFileSelection() {
@@ -966,7 +1095,7 @@
                     await new Promise(r => setTimeout(r, 500));
                 }
 
-                // Tahap 7: SUKSES
+                // Tahap 7: SUKSES -> TAMPILKAN FORM
                 finalizeVerification(currentFileHash, extractedUniqueKey);
 
             } catch (error) {
@@ -983,6 +1112,7 @@
             statusBox.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> ' + message;
         }
 
+        // --- FINALIZE VERIFICATION (SHOW FORM) ---
         function finalizeVerification(hash, dataFingerprint) {
             const statusBox = document.getElementById('statusBox');
             const btn = document.getElementById('verifyBtn');
@@ -990,21 +1120,40 @@
             localStorage.setItem(STORAGE_KEY_HASH, hash);
             localStorage.setItem(STORAGE_KEY_DATA, dataFingerprint);
 
-            showStatus("TERVERIFIKASI: Data Valid & Baru. Link aktif...", "success");
+            showStatus("TERVERIFIKASI: Data Valid & Baru. Mengalihkan ke formulir...", "success");
 
             setTimeout(() => {
-                updateStatus("Mengarahkan ke Opal...", "loading");
+                // Sembunyikan Verifikasi Step
+                document.getElementById('verificationStep').style.display = 'none';
                 
-                setTimeout(() => {
-                    window.open(OPAL_SECRET_URL, '_blank');
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
-                    btn.style.backgroundColor = "#4CAF50";
-                    
-                    setTimeout(() => {
-                        resetUI();
-                    }, 3000);
-                }, 1000);
+                // Tampilkan Order Form Step
+                document.getElementById('orderFormStep').style.display = 'block';
             }, 1000);
+        }
+
+        // --- WHATSAPP INTEGRATION ---
+        function submitToWhatsApp() {
+            const model = document.getElementById('modelOption').value;
+            const bg = document.getElementById('bgOption').value;
+            const file = document.getElementById('userPhoto').files[0];
+
+            if (!model) {
+                alert("Silakan pilih model terlebih dahulu.");
+                return;
+            }
+
+            const phone = "6285117124247";
+            let message = `Halo Admin Karya Abadi,%0A%0ASaya sudah verifikasi pembayaran. Saya ingin memesan Pas Foto Pro.%0A%0A*Detail Pesanan:*%0A`;
+            message += `Model: ${model}%0A`;
+            message += `Background: ${bg}%0A%0A`;
+            message += `Mohon diproses, terima kasih.`;
+
+            if (file) {
+                message += `%0A%0A( Foto tersedia di galeri perangkat saya )`;
+            }
+
+            const whatsappUrl = `https://wa.me/${phone}?text=${message}`;
+            window.open(whatsappUrl, '_blank');
         }
 
         function showStatus(message, type) {
