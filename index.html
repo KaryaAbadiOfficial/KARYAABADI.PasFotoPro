@@ -311,7 +311,7 @@
 
         .disabled-btn { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
 
-        /* --- FORMULIR STYLES (UPDATED WHITE TEXT) --- */
+        /* --- FORMULIR STYLES (WHITE FONT) --- */
         #orderFormStep {
             display: none; /* Hidden initially */
             animation: slideUp 0.5s ease-out;
@@ -322,7 +322,6 @@
             text-align: left;
         }
 
-        /* Warna Teks Label Putih */
         .form-label {
             display: block;
             margin-bottom: 8px;
@@ -331,13 +330,12 @@
             background-color: transparent;
         }
 
-        /* Input Background Gelap, Teks Putih */
         .form-control {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: 5px;
-            background-color: rgba(255,255,255,0.1) !important; /* Latar Gelap Transparan agar teks putih terbaca */
+            background-color: rgba(255,255,255,0.1) !important; /* Latar Gelap Transparan */
             color: #ffffff !important; /* WARNA PUTIH */
             font-family: 'Roboto', sans-serif;
             font-size: 1rem;
@@ -345,7 +343,7 @@
 
         /* Override Option Text juga putih */
         .form-control option {
-            color: #000000 !important; /* Agar terbaca di dropdown browser */
+            color: #000000 !important;
             background-color: #ffffff;
         }
 
@@ -737,7 +735,7 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic (FINAL WHITE FONT & OCR) -->
+    <!-- JavaScript Logic (DIRECT WA SHARE) -->
     <script>
         // ==========================================
         // 1. LOGIKA IKLAN (FIXED LEFT & RIGHT)
@@ -817,10 +815,9 @@
 
 
         // ==========================================
-        // 2. LOGIKA WEBSITE UTAMA (FINAL OCR & WHITE FONT)
+        // 2. LOGIKA WEBSITE UTAMA (FINAL WA DIRECT)
         // ==========================================
         
-        // const OPAL_SECRET_URL = "https://opal.google/app/1UZNUPcU1vUdz2_HIi_dBihXFXW9tXSTB"; // REMOVED
         const STORAGE_KEY_HASH = "karyaAbadi_lastVerifiedHash";
         const STORAGE_KEY_DATA = "karyaAbadi_lastVerifiedUnique"; 
         
@@ -846,8 +843,7 @@
             ];
         }
 
-        // --- FILE HASHING FUNCTION (SHA-256) ---
-        // Ini adalah kunci untuk deteksi "Gambar Sama Persis" yang bertahan meski di-refresh
+        // --- FILE HASHING FUNCTION ---
         async function calculateFileHash(file) {
             const arrayBuffer = await file.arrayBuffer();
             const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
@@ -924,14 +920,15 @@
                 info.innerText = "File terpilih: " + currentFile.name;
                 label.innerHTML = '<i class="fas fa-file-image"></i> ' + currentFile.name;
                 
-                // CEK SAMA SAAT PILIH FILE (Tahan Refresh)
+                // CEK SAMA SAAT PILIH FILE (PERCEPAT)
                 const lastHash = localStorage.getItem(STORAGE_KEY_HASH);
+                const lastData = localStorage.getItem(STORAGE_KEY_DATA);
 
-                // Jika Hash file sama persis dengan yang tersimpan di LocalStorage
                 if (currentFileHash === lastHash) {
                     info.innerText = "GAGAL: File ini pernah diverifikasi sebelumnya.";
                     info.style.color = "#ff9800"; 
-                    btn.classList.add('disabled-btn'); // Langsung matikan tombol
+                    btn.classList.add('disabled-btn'); // Disable button immediately
+                    return;
                 } else {
                     info.style.color = "var(--primary-red)";
                     btn.classList.remove('disabled-btn');
@@ -950,7 +947,7 @@
             const lastVerifiedHash = localStorage.getItem(STORAGE_KEY_HASH);
             const todayDates = getTodayDatePatterns();
 
-            // 1. CEK CEPAT: FILE SAMA PERSIS? (Double check persist across refresh)
+            // 1. CEK CEPAT: FILE SAMA PERSIS? (Persist across refresh)
             if (currentFileHash === lastVerifiedHash) {
                 showStatus("AKSES DITOLAK: File ini pernah diverifikasi sebelumnya (Data Sama).", "reject");
                 return;
@@ -1129,7 +1126,6 @@
             const statusBox = document.getElementById('statusBox');
             const btn = document.getElementById('verifyBtn');
 
-            // Simpan Hash File & Data Unik ke LocalStorage (Agar bertahan refresh)
             localStorage.setItem(STORAGE_KEY_HASH, hash);
             localStorage.setItem(STORAGE_KEY_DATA, dataFingerprint);
 
@@ -1144,7 +1140,7 @@
             }, 1000);
         }
 
-        // --- DIRECT FILE SHARE LOGIC (WEB SHARE API) ---
+        // --- DIRECT WHATSAPP SHARE (SEND FILE + TEXT) ---
         function submitToWhatsApp() {
             const model = document.getElementById('modelOption').value;
             const bg = document.getElementById('bgOption').value;
@@ -1159,13 +1155,17 @@
                 return;
             }
 
-            // Format Pesan Caption
+            // Nomor WA tujuan
+            const phone = "6285117124247";
+
+            // Format Pesan Caption (Isi Formulir)
             let messageText = `*Pesanan Pas Foto Karya Abadi*%0A%0A`;
-            messageText += `Model: ${model}%0A`;
-            messageText += `Background: ${bg}%0A%0A`;
+            messageText += `1. Upload Foto: Terlampir%0A`;
+            messageText += `2. Pilihan Model: ${model}%0A`;
+            messageText += `3. Pilihan Background: ${bg}%0A%0A`;
             messageText += `Mohon diproses, terima kasih.`;
 
-            // Gunakan Web Share API untuk mengirim file langsung
+            // Gunakan Web Share API untuk mengirim file langsung (Langsung ke WA jika user pilih WA)
             if (navigator.canShare && navigator.share) {
                 const shareData = {
                     files: [file],
@@ -1173,19 +1173,21 @@
                     title: 'Pesanan Pas Foto'
                 };
 
+                // Cek apakah device support file sharing
                 if (navigator.canShare(shareData)) {
                     navigator.share(shareData)
-                        .then(() => console.log('Berhasil dikirim ke WhatsApp via Web Share'))
+                        .then(() => console.log('Berhasil dikirim via Share Menu.'))
                         .catch((error) => {
-                            console.log('Error sharing atau dibatalkan user:', error);
-                            // Fallback jika user batalkan atau error
+                            console.log('Dibatalkan user atau error browser:', error);
+                            // Jika user membatalkan atau error, buka link WA biasa (tanpa file)
                             fallbackWA(messageText);
                         });
                 } else {
+                    // Jika device tidak support file share (jarang terjadi di modern OS)
                     fallbackWA(messageText);
                 }
             } else {
-                // Fallback untuk browser lama / Desktop yang tidak support file sharing
+                // Fallback untuk browser lawas
                 fallbackWA(messageText);
             }
         }
