@@ -311,38 +311,41 @@
 
         .disabled-btn { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
 
-        /* --- FORMULIR STYLES (BARU) --- */
+        /* --- FORMULIR STYLES (UPDATED BLACK FONT) --- */
         #orderFormStep {
             display: none; /* Hidden initially */
             animation: slideUp 0.5s ease-out;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom:20px;
             text-align: left;
         }
 
+        /* Paksa Teks Hitam & Background Putih */
         .form-label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-white);
+            font-weight: 600;
+            color: #000000 !important; /* WARNA HITAM */
+            background-color: transparent;
         }
 
         .form-control {
             width: 100%;
             padding: 12px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #ccc;
             border-radius: 5px;
-            background-color: rgba(255,255,255,0.05);
-            color: var(--text-white);
+            background-color: #ffffff !important; /* Background Putih Agar Teks Hitam Terbaca */
+            color: #000000 !important; /* WARNA HITAM */
             font-family: 'Roboto', sans-serif;
             font-size: 1rem;
         }
 
-        body.light-mode .form-control {
-            background-color: #f9f9f9;
-            color: #333;
+        /* Override Option Text juga hitam */
+        .form-control option {
+            color: #000000 !important;
+            background-color: #ffffff;
         }
 
         .form-control:focus {
@@ -355,6 +358,10 @@
             color: white;
             width: 100%;
             box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .btn-whatsapp:hover {
@@ -698,7 +705,7 @@
 
                     <!-- 2. Pilihan Model -->
                     <div class="form-group">
-                        <label class="form-label">2. Pilihan Model (Ketik/Pilih)</label>
+                        <label class="form-label">2. Pilihan Model</label>
                         <select id="modelOption" class="form-control">
                             <option value="" disabled selected>-- Pilih Model --</option>
                             <option value="Kemeja putih polos pria">Kemeja putih polos pria</option>
@@ -722,14 +729,14 @@
 
                     <!-- Submit Button -->
                     <button type="submit" class="btn btn-whatsapp">
-                        <i class="fab fa-whatsapp"></i> Kirim ke WhatsApp
+                        <i class="fab fa-whatsapp"></i> Kirim Foto ke WhatsApp
                     </button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Logic (FINAL WA INTEGRATION) -->
+    <!-- JavaScript Logic (FINAL REFRESH CHECK & BLACK FONT) -->
     <script>
         // ==========================================
         // 1. LOGIKA IKLAN (FIXED LEFT & RIGHT)
@@ -809,7 +816,7 @@
 
 
         // ==========================================
-        // 2. LOGIKA WEBSITE UTAMA (FINAL OCR + FORM)
+        // 2. LOGIKA WEBSITE UTAMA (REFRESH CHECK)
         // ==========================================
         
         // const OPAL_SECRET_URL = "https://opal.google/app/1UZNUPcU1vUdz2_HIi_dBihXFXW9tXSTB"; // REMOVED
@@ -915,15 +922,19 @@
                 info.innerText = "File terpilih: " + currentFile.name;
                 label.innerHTML = '<i class="fas fa-file-image"></i> ' + currentFile.name;
                 
+                // CEK SAMA PADA SAAT PILIH FILE (PERCEPAT)
                 const lastHash = localStorage.getItem(STORAGE_KEY_HASH);
+                const lastData = localStorage.getItem(STORAGE_KEY_DATA);
+
                 if (currentFileHash === lastHash) {
-                    info.innerText = "Peringatan: File ini pernah diupload sebelumnya.";
+                    info.innerText = "GAGAL: File ini pernah diverifikasi sebelumnya.";
                     info.style.color = "#ff9800"; 
+                    btn.classList.add('disabled-btn'); // Disable button immediately
+                    return;
                 } else {
                     info.style.color = "var(--primary-red)";
+                    btn.classList.remove('disabled-btn');
                 }
-
-                btn.classList.remove('disabled-btn');
             } else {
                 resetUI();
             }
@@ -938,9 +949,9 @@
             const lastVerifiedHash = localStorage.getItem(STORAGE_KEY_HASH);
             const todayDates = getTodayDatePatterns();
 
-            // 1. CEK CEPAT: FILE SAMA PERSIS?
+            // 1. CEK CEPAT: FILE SAMA PERSIS? (Persist across refresh)
             if (currentFileHash === lastVerifiedHash) {
-                showStatus("AKSES DITOLAK: File ini pernah diverifikasi sebelumnya.", "reject");
+                showStatus("AKSES DITOLAK: File ini pernah diverifikasi sebelumnya (Data Sama).", "reject");
                 return;
             }
 
@@ -1018,7 +1029,7 @@
                     // Contoh: "12:28-2054"
                     extractedUniqueKey = `${transactionTime}-${last4Id}`;
 
-                    // 6. Cek Duplikasi
+                    // 6. Cek Duplikasi (Persist across refresh via LocalStorage)
                     const storedKey = localStorage.getItem(STORAGE_KEY_DATA);
                     if (storedKey && storedKey === extractedUniqueKey) {
                         throw new Error(`GAGAL (DANA): Waktu & 4 Angka Terakhir ID DANA SAMA. Akses Ditolak.`);
@@ -1131,7 +1142,7 @@
             }, 1000);
         }
 
-        // --- WHATSAPP INTEGRATION ---
+        // --- DIRECT FILE SHARE LOGIC (WEB SHARE API) ---
         function submitToWhatsApp() {
             const model = document.getElementById('modelOption').value;
             const bg = document.getElementById('bgOption').value;
@@ -1141,19 +1152,47 @@
                 alert("Silakan pilih model terlebih dahulu.");
                 return;
             }
-
-            const phone = "6285117124247";
-            let message = `Halo Admin Karya Abadi,%0A%0ASaya sudah verifikasi pembayaran. Saya ingin memesan Pas Foto Pro.%0A%0A*Detail Pesanan:*%0A`;
-            message += `Model: ${model}%0A`;
-            message += `Background: ${bg}%0A%0A`;
-            message += `Mohon diproses, terima kasih.`;
-
-            if (file) {
-                message += `%0A%0A( Foto tersedia di galeri perangkat saya )`;
+            if (!file) {
+                alert("Silakan upload foto Anda terlebih dahulu agar bisa dikirim langsung.");
+                return;
             }
 
-            const whatsappUrl = `https://wa.me/${phone}?text=${message}`;
+            // Format Pesan Caption
+            let messageText = `*Pesanan Pas Foto Karya Abadi*%0A%0A`;
+            messageText += `Model: ${model}%0A`;
+            messageText += `Background: ${bg}%0A%0A`;
+            messageText += `Mohon diproses, terima kasih.`;
+
+            // Gunakan Web Share API untuk mengirim file langsung
+            if (navigator.canShare && navigator.share) {
+                const shareData = {
+                    files: [file],
+                    text: messageText,
+                    title: 'Pesanan Pas Foto'
+                };
+
+                if (navigator.canShare(shareData)) {
+                    navigator.share(shareData)
+                        .then(() => console.log('Berhasil dikirim ke WhatsApp via Web Share'))
+                        .catch((error) => {
+                            console.log('Error sharing atau dibatalkan user:', error);
+                            // Fallback jika user batalkan atau error
+                            fallbackWA(messageText);
+                        });
+                } else {
+                    fallbackWA(messageText);
+                }
+            } else {
+                // Fallback untuk browser lama / Desktop yang tidak support file sharing
+                fallbackWA(messageText);
+            }
+        }
+
+        function fallbackWA(text) {
+            const phone = "6285117124247";
+            const whatsappUrl = `https://wa.me/${phone}?text=${text}`;
             window.open(whatsappUrl, '_blank');
+            alert("Browser ini tidak mendukung kirim file otomatis. Silakan lampirkan foto secara manual di WhatsApp.");
         }
 
         function showStatus(message, type) {
