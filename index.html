@@ -619,7 +619,7 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic (DANA 4-DIGIT LOGIC) -->
+    <!-- JavaScript Logic (FINAL TIME & ID LOGIC) -->
     <script>
         // ==========================================
         // 1. LOGIKA IKLAN (FIXED LEFT & RIGHT)
@@ -699,12 +699,12 @@
 
 
         // ==========================================
-        // 2. LOGIKA WEBSITE UTAMA (UPDATED 4-DIGIT)
+        // 2. LOGIKA WEBSITE UTAMA (FINAL OCR)
         // ==========================================
         
         const OPAL_SECRET_URL = "https://opal.google/app/1UZNUPcU1vUdz2_HIi_dBihXFXW9tXSTB";
         const STORAGE_KEY_HASH = "karyaAbadi_lastVerifiedHash";
-        const STORAGE_KEY_DATA = "karyaAbadi_lastVerifiedUnique"; // Changed to Unique Data
+        const STORAGE_KEY_DATA = "karyaAbadi_lastVerifiedUnique"; // Storage for Time+ID
         
         let currentFile = null;
         let currentFileHash = null;
@@ -800,7 +800,7 @@
             }
         }
 
-        // --- OCR & VERIFICATION PROCESS (UPDATED 4 DIGIT + TIME) ---
+        // --- OCR & VERIFICATION PROCESS (FINAL TIME & ID) ---
         async function startVerificationProcess() {
             if (!currentFile) return;
 
@@ -855,7 +855,7 @@
                 let extractedUniqueKey = null;
                 let isDanaReceipt = lowerText.includes("dana") && (lowerText.includes("detail transaksi") || lowerText.includes("saldo dana"));
 
-                // --- LOGIKA KHUSUS DANA (UPDATED 4 DIGIT + WAKTU) ---
+                // --- LOGIKA KHUSUS DANA (FINAL: TIME + 4 DIGIT ID) ---
                 if (isDanaReceipt) {
                     updateStatus("Terdeteksi Screenshot DANA...", "loading");
                     
@@ -869,31 +869,30 @@
                         throw new Error("GAGAL (DANA): Penerima bukan KARYA ABADI.");
                     }
 
-                    // 3. Ekstrak ID DANA
-                    const danaIdMatch = text.match(/(?:ID Transaksi|No\. Referensi)\s*[:]\s*([0-9A-Z-]+)/i);
-                    if (!danaIdMatch) {
-                        throw new Error("GAGAL (DANA): ID Transaksi tidak ditemukan.");
-                    }
-                    const fullID = danaIdMatch[1];
-
-                    // 4. Ekstrak 4 Angka Terakhir (NEW LOGIC)
-                    const last4ID = fullID.slice(-4);
-
-                    // 5. Ekstrak Waktu Transaksi (HH:MM)
+                    // 3. Ekstrak Waktu Transaksi (HH:MM)
                     const timeMatch = text.match(/([01]?[0-9]|2[0-3]):[0-5][0-9]/);
                     if (!timeMatch) {
                         throw new Error("GAGAL (DANA): Waktu transaksi tidak terbaca.");
                     }
                     const transactionTime = timeMatch[0];
 
-                    // 6. Buat Kunci Unik (4 Digit Terakhir + Waktu)
-                    // Contoh: "7890-12:28"
-                    extractedUniqueKey = `${last4ID}_${transactionTime}`;
+                    // 4. Ekstrak ID DANA & Ambil 4 Angka Terakhir
+                    // Regex mencari ID setelah "ID DANA"
+                    const idMatch = text.match(/ID DANA\s*[:\.]?\s*([0-9\w]+)/i);
+                    if (!idMatch) {
+                        throw new Error("GAGAL (DANA): ID DANA tidak ditemukan.");
+                    }
+                    const fullId = idMatch[1];
+                    const last4Id = fullId.slice(-4); // Ambil 4 terakhir
 
-                    // 7. Validasi Kunci Unik
+                    // 5. Buat Kunci Unik: WAKTU + 4 DIGIT TERAKHIR ID
+                    // Contoh: "12:28-2054"
+                    extractedUniqueKey = `${transactionTime}-${last4Id}`;
+
+                    // 6. Cek Duplikasi
                     const storedKey = localStorage.getItem(STORAGE_KEY_DATA);
                     if (storedKey && storedKey === extractedUniqueKey) {
-                        throw new Error(`GAGAL (DANA): Data Transaksi ini (4 Digit ID & Waktu) sudah pernah digunakan. Upload bukti baru.`);
+                        throw new Error(`GAGAL (DANA): Waktu & 4 Angka Terakhir ID DANA SAMA. Akses Ditolak.`);
                     }
 
                 } 
@@ -958,7 +957,7 @@
                     "Verifikasi: Penerima KARYA ABADI... OK",
                     "Verifikasi: Nominal Rp 1.000... OK",
                     `Verifikasi: Tanggal Hari Ini... OK`,
-                    isDanaReceipt ? "Verifikasi: 4 Digit ID & Waktu... OK" : "Verifikasi: RRN... OK",
+                    isDanaReceipt ? "Verifikasi: Waktu & 4 Digit ID... OK" : "Verifikasi: RRN... OK",
                     "Verifikasi: Data Unik... BERBEDA"
                 ];
 
