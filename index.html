@@ -311,40 +311,41 @@
 
         .disabled-btn { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
 
-        /* --- FORMULIR STYLES (UPDATED BLACK FONT) --- */
+        /* --- FORMULIR STYLES (UPDATED WHITE TEXT) --- */
         #orderFormStep {
             display: none; /* Hidden initially */
             animation: slideUp 0.5s ease-out;
         }
 
         .form-group {
-            margin-bottom:20px;
+            margin-bottom: 20px;
             text-align: left;
         }
 
-        /* Paksa Teks Hitam & Background Putih */
+        /* Warna Teks Label Putih */
         .form-label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #000000 !important; /* WARNA HITAM */
+            color: #ffffff !important; /* WARNA PUTIH */
             background-color: transparent;
         }
 
+        /* Input Background Gelap, Teks Putih */
         .form-control {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
             border-radius: 5px;
-            background-color: #ffffff !important; /* Background Putih Agar Teks Hitam Terbaca */
-            color: #000000 !important; /* WARNA HITAM */
+            background-color: rgba(255,255,255,0.1) !important; /* Latar Gelap Transparan agar teks putih terbaca */
+            color: #ffffff !important; /* WARNA PUTIH */
             font-family: 'Roboto', sans-serif;
             font-size: 1rem;
         }
 
-        /* Override Option Text juga hitam */
+        /* Override Option Text juga putih */
         .form-control option {
-            color: #000000 !important;
+            color: #000000 !important; /* Agar terbaca di dropdown browser */
             background-color: #ffffff;
         }
 
@@ -693,7 +694,7 @@
                     
                     <!-- 1. Upload Foto -->
                     <div class="form-group">
-                        <label class="form-label">1. Upload Foto Anda</label>
+                        <label class="form-label">1. Upload Foto</label>
                         <div class="file-upload-wrapper">
                             <label for="userPhoto" class="file-upload-label" id="userPhotoLabel">
                                 <i class="fas fa-camera" style="font-size: 1.5rem;"></i>
@@ -736,7 +737,7 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic (FINAL REFRESH CHECK & BLACK FONT) -->
+    <!-- JavaScript Logic (FINAL WHITE FONT & OCR) -->
     <script>
         // ==========================================
         // 1. LOGIKA IKLAN (FIXED LEFT & RIGHT)
@@ -816,7 +817,7 @@
 
 
         // ==========================================
-        // 2. LOGIKA WEBSITE UTAMA (REFRESH CHECK)
+        // 2. LOGIKA WEBSITE UTAMA (FINAL OCR & WHITE FONT)
         // ==========================================
         
         // const OPAL_SECRET_URL = "https://opal.google/app/1UZNUPcU1vUdz2_HIi_dBihXFXW9tXSTB"; // REMOVED
@@ -845,7 +846,8 @@
             ];
         }
 
-        // --- FILE HASHING FUNCTION ---
+        // --- FILE HASHING FUNCTION (SHA-256) ---
+        // Ini adalah kunci untuk deteksi "Gambar Sama Persis" yang bertahan meski di-refresh
         async function calculateFileHash(file) {
             const arrayBuffer = await file.arrayBuffer();
             const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
@@ -922,15 +924,14 @@
                 info.innerText = "File terpilih: " + currentFile.name;
                 label.innerHTML = '<i class="fas fa-file-image"></i> ' + currentFile.name;
                 
-                // CEK SAMA PADA SAAT PILIH FILE (PERCEPAT)
+                // CEK SAMA SAAT PILIH FILE (Tahan Refresh)
                 const lastHash = localStorage.getItem(STORAGE_KEY_HASH);
-                const lastData = localStorage.getItem(STORAGE_KEY_DATA);
 
+                // Jika Hash file sama persis dengan yang tersimpan di LocalStorage
                 if (currentFileHash === lastHash) {
                     info.innerText = "GAGAL: File ini pernah diverifikasi sebelumnya.";
                     info.style.color = "#ff9800"; 
-                    btn.classList.add('disabled-btn'); // Disable button immediately
-                    return;
+                    btn.classList.add('disabled-btn'); // Langsung matikan tombol
                 } else {
                     info.style.color = "var(--primary-red)";
                     btn.classList.remove('disabled-btn');
@@ -949,7 +950,7 @@
             const lastVerifiedHash = localStorage.getItem(STORAGE_KEY_HASH);
             const todayDates = getTodayDatePatterns();
 
-            // 1. CEK CEPAT: FILE SAMA PERSIS? (Persist across refresh)
+            // 1. CEK CEPAT: FILE SAMA PERSIS? (Double check persist across refresh)
             if (currentFileHash === lastVerifiedHash) {
                 showStatus("AKSES DITOLAK: File ini pernah diverifikasi sebelumnya (Data Sama).", "reject");
                 return;
@@ -1128,6 +1129,7 @@
             const statusBox = document.getElementById('statusBox');
             const btn = document.getElementById('verifyBtn');
 
+            // Simpan Hash File & Data Unik ke LocalStorage (Agar bertahan refresh)
             localStorage.setItem(STORAGE_KEY_HASH, hash);
             localStorage.setItem(STORAGE_KEY_DATA, dataFingerprint);
 
@@ -1149,11 +1151,11 @@
             const file = document.getElementById('userPhoto').files[0];
 
             if (!model) {
-                alert("Silakan pilih model terlebih dahulu.");
+                alert("Silakan pilih Model terlebih dahulu.");
                 return;
             }
             if (!file) {
-                alert("Silakan upload foto Anda terlebih dahulu agar bisa dikirim langsung.");
+                alert("Silakan Upload Foto Anda terlebih dahulu agar bisa dikirim langsung.");
                 return;
             }
 
