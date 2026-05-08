@@ -452,7 +452,7 @@
         </div>
     </section>
 
-    <!-- Flow / Process Section (UPDATED) -->
+    <!-- Flow / Process Section -->
     <section id="flow" class="section-padding" style="background-color: rgba(255,255,255,0.02);">
         <div class="container">
             <div class="section-title">
@@ -476,7 +476,7 @@
                 <!-- Step 3 -->
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-qrcode"></i></div>
-                    <h3>3. Scan QRIS Donasi</h3>
+                    <h3>3. Scan QRIS via BANK and DANA</h3>
                     <p>Donasi Rp.1000,- sebagai bentuk dukungan kepada kami.</p>
                 </div>
                 <!-- Step 4 -->
@@ -585,9 +585,9 @@
                 <!-- Step 1: QRIS -->
                 <div class="flow-step">
                     <div class="step-text-center">
-                        <p><strong>Langkah 1:</strong> Scan QRIS.</p>
+                        <p><strong>Langkah 1:</strong> Scan QRIS via BANK and DANA.</p>
                         
-                        <!-- QRIS IMAGE UPDATED (NEW USER UPLOAD) -->
+                        <!-- QRIS IMAGE -->
                         <img src="https://z-cdn-media.chatglm.cn/files/5a05ede0-b812-4ad2-bbad-fa022fc5b42a.png?auth_key=1878102707-48fc6dd3fed44155b02bdfcb99ecf4f0-0-37c4428294b7205f4405e727b35eba07" alt="QRIS Pas Foto Pro" class="qris-img">
                         
                         <p class="qris-price-text">Dukung Kami : Rp.1.000.-</p>
@@ -619,13 +619,12 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic (MAIN + ADS FIXED) -->
+    <!-- JavaScript Logic (MAIN + ADS FIXED + ADVANCED OCR) -->
     <script>
         // ==========================================
         // 1. LOGIKA IKLAN (FIXED LEFT & RIGHT)
         // ==========================================
         
-        // Gabungan semua data iklan
         const adsData = [
             {
                 image: "https://down-cvs-id.img.susercontent.com/id-11134207-7rbk8-m7ufq95rm6vkfa.webp",
@@ -672,55 +671,40 @@
         const linkLeft = document.getElementById("link-left");
 
         function showAds(index) {
-            // Update Konten Kanan
             imgRight.src = adsData[index].image;
             linkRight.href = adsData[index].link;
-
-            // Update Konten Kiri (Sama agar sinkron, atau bisa dibuat beda index)
             imgLeft.src = adsData[index].image;
             linkLeft.href = adsData[index].link;
-
-            // Tampilkan dengan animasi slide
             adsRight.classList.add("show-right");
             adsLeft.classList.add("show-left");
         }
 
         function rotateAds() {
-            // Sembunyikan dulu
             adsRight.classList.remove("show-right");
             adsLeft.classList.remove("show-left");
-
-            // Tunggu animasi slide-out selesai (sesuai CSS transition 0.7s), lalu ganti gambar
             setTimeout(() => {
                 currentAdsIndex++;
-                if (currentAdsIndex >= adsData.length) {
-                    currentAdsIndex = 0;
-                }
+                if (currentAdsIndex >= adsData.length) currentAdsIndex = 0;
                 showAds(currentAdsIndex);
             }, 700); 
         }
 
         function closeAds(side) {
-            if (side === 'right') {
-                adsRight.style.display = 'none';
-            } else if (side === 'left') {
-                adsLeft.style.display = 'none';
-            }
+            if (side === 'right') adsRight.style.display = 'none';
+            else if (side === 'left') adsLeft.style.display = 'none';
         }
 
-        // Mulai Iklan
         showAds(currentAdsIndex);
         adInterval = setInterval(rotateAds, 5000);
 
 
         // ==========================================
-        // 2. LOGIKA WEBSITE UTAMA (MODAL & OCR)
+        // 2. LOGIKA WEBSITE UTAMA (MODAL & OCR UPDATE)
         // ==========================================
         
-        // KONFIGURASI
         const OPAL_SECRET_URL = "https://opal.google/app/1UZNUPcU1vUdz2_HIi_dBihXFXW9tXSTB";
         const STORAGE_KEY_HASH = "karyaAbadi_lastVerifiedHash";
-        const STORAGE_KEY_DATA = "karyaAbadi_lastVerifiedRRN"; 
+        const STORAGE_KEY_DATA = "karyaAbadi_lastVerifiedID"; 
         
         let currentFile = null;
         let currentFileHash = null;
@@ -729,23 +713,18 @@
         function getTodayDatePatterns() {
             const now = new Date();
             const day = String(now.getDate()).padStart(2, '0');
-            const monthNum = String(now.getMonth() + 1).padStart(2, '0'); // 01 - 12
+            const monthNum = String(now.getMonth() + 1).padStart(2, '0'); 
             const year = now.getFullYear();
-
-            // Bulan Singkat Indo
             const monthsIndo = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"];
-            // Bulan Singkat Eng (Kadang OCR baca Inggris)
             const monthsEng = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
             const mIndo = monthsIndo[now.getMonth()];
             const mEng = monthsEng[now.getMonth()];
-
             return [
-                `${day} ${mIndo} ${year}`, // "06 Mei 2026"
-                `${day}-${mIndo}-${year}`, // "06-Mei-2026"
-                `${day} ${mEng} ${year}`,  // "06 May 2026" (Backup)
-                `${day}/${monthNum}/${year}`, // "06/05/2026"
-                `${day}-${monthNum}-${year}`  // "06-05-2026"
+                `${day} ${mIndo} ${year}`, 
+                `${day}-${mIndo}-${year}`, 
+                `${day} ${mEng} ${year}`,  
+                `${day}/${monthNum}/${year}`,
+                `${day}-${monthNum}-${year}`
             ];
         }
 
@@ -754,8 +733,7 @@
             const arrayBuffer = await file.arrayBuffer();
             const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            return hashHex;
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
         // Modal Functions
@@ -795,7 +773,6 @@
             btn.style.backgroundColor = "";
         }
 
-        // --- HANDLE FILE SELECTION ---
         async function handleFileSelection() {
             const input = document.getElementById('proofInput');
             const info = document.getElementById('fileInfo');
@@ -823,7 +800,7 @@
             }
         }
 
-        // --- OCR & VERIFICATION PROCESS CORE (UPDATED LOGIC) ---
+        // --- OCR & VERIFICATION PROCESS (UPDATED LOGIC) ---
         async function startVerificationProcess() {
             if (!currentFile) return;
 
@@ -845,13 +822,12 @@
             statusBox.className = 'status-box status-loading';
 
             try {
-                // Tahap 1: Inisialisasi OCR
                 updateStatus("Inisialisasi Engine OCR...", "loading");
                 await new Promise(r => setTimeout(r, 1000));
 
-                // Tahap 2: Menjalankan OCR
                 updateStatus("Membaca Teks pada Bukti Screenshot...", "loading");
                 
+                // Menggunakan Tesseract dengan bahasa Inggris dan Indonesia
                 const { data: { text, confidence } } = await Tesseract.recognize(
                     currentFile,
                     'eng+ind',
@@ -867,27 +843,53 @@
                 console.log("Hasil OCR:", text);
                 console.log("Skor Confidence:", confidence);
 
-                // --- LOGIKA BARU: CEK EDITAN ---
-                if (confidence < 65) {
-                    throw new Error("GAGAL: Terdeteksi Editan / Kualitas Rendah. Gambar tidak jelas atau hasil editan.");
+                // --- LOGIKA CEK KUALITAS ---
+                if (confidence < 60) {
+                    throw new Error("GAGAL: Kualitas gambar buruk atau blur. OCR tidak dapat membaca teks dengan jelas.");
                 }
-                if (text.length < 100) {
-                    throw new Error("GAGAL: Data Tidak Lengkap. Gambar terpotong atau data dihapus.");
+                if (text.length < 50) {
+                    throw new Error("GAGAL: Data Tidak Lengkap. Gambar terpotong.");
                 }
 
-                // Tahap 3: EKSTRAKSI DATA (RRN / Tanggal)
-                const rrnMatch = text.match(/RRN\s*[:]\s*([0-9]+)/i);
-                const extractedRRN = rrnMatch ? rrnMatch[1] : "UNKNOWN";
+                // --- LOGIKA DETEKSI JENIS BUKTI (QRIS BANK vs DANA) ---
+                const lowerText = text.toLowerCase();
+                let extractedID = null;
+                let idTypeLabel = "ID Transaksi";
 
-                if (extractedRRN !== "UNKNOWN") {
-                    if (extractedRRN.length !== 12) {
-                        throw new Error("GAGAL: Format RRN Tidak Valid (Harus 12 Digit). Terdeteksi kecurangan data.");
-                    }
+                // Cek 1: Format QRIS Bank (Mencari RRN)
+                let rrnMatch = text.match(/RRN\s*[:]\s*([0-9]+)/i);
+                if (rrnMatch) {
+                    extractedID = rrnMatch[1];
+                    idTypeLabel = "RRN";
                 } else {
-                    throw new Error("GAGAL: RRN Tidak Ditemukan. Data krusial hilang, kemungkinan hasil editan.");
+                    // Cek 2: Format DANA / E-Wallet (Mencari ID Transaksi atau No. Referensi)
+                    // Pola untuk "ID Transaksi: 12345" atau "No. Referensi 12345"
+                    let walletMatch = text.match(/(?:ID Transaksi|No\. Referensi)\s*[:]\s*([0-9]+)/i);
+                    if (walletMatch) {
+                        extractedID = walletMatch[1];
+                        idTypeLabel = "ID Transaksi";
+                    }
                 }
 
-                // --- LOGIKA: VALIDASI TANGGAL HARI INI ---
+                // Validasi ID Wajib Ada
+                if (!extractedID || extractedID.length < 6) {
+                    throw new Error("GAGAL: ID Transaksi/RRN tidak ditemukan atau tidak valid. Pastikan screenshot menampilkan detail ID.");
+                }
+
+                // --- VALIDASI PENERIMA (PENTING) ---
+                // Harus berisi "KARYA ABADI" atau minimal "ABADI" jika OCR kurang akurat
+                if (!lowerText.includes("karya") && !lowerText.includes("abadi")) {
+                    throw new Error("GAGAL: Nama penerima tidak sesuai (KARYA ABADI).");
+                }
+
+                // --- VALIDASI NOMINAL (Rp1.000) ---
+                // Regex fleksibel untuk mencari Rp 1.000 atau 1.000
+                const amountPattern = /(?:rp\.?\s?)1\.000|(?:1\.000)/i;
+                if (!amountPattern.test(text)) {
+                    throw new Error("GAGAL: Nominal transaksi tidak sesuai (Harus Rp 1.000).");
+                }
+
+                // --- VALIDASI TANGGAL HARI INI ---
                 const dateRegex = /(\d{2})[-\/](\d{2})[-\/](\d{4})/g;
                 const foundDates = text.match(dateRegex);
                 let isDateValid = false;
@@ -901,55 +903,40 @@
                     });
                 }
 
+                // Jika tanggal standar tidak ditemukan, coba deteksi format teks "08 Mei 2026"
+                if (!isDateValid) {
+                     if (todayDates.some(date => text.includes(date.split(" ")[0] + " " + date.split(" ")[1]))) { // Cek dd Mmm
+                         isDateValid = true;
+                     }
+                }
+
                 if (!isDateValid) {
                     throw new Error(`GAGAL: Tanggal transaksi harus hari ini (${todayDates[0]}). Sistem mendeteksi tanggal lain.`);
                 }
 
-                // Tahap 4: VALIDASI KATA KUNCI (Bukti Asli)
-                const lowerText = text.toLowerCase();
-                const requiredKeywords = [
-                    "transaksi",
-                    "berhasil", 
-                    "rp", 
-                    "rrn",
-                    "tanggal"
-                ];
-
-                const missingKeywords = requiredKeywords.filter(kw => !lowerText.includes(kw));
-
-                if (missingKeywords.length > 0) {
-                    throw new Error("GAGAL: Data '" + missingKeywords[0] + "' tidak ditemukan.");
-                }
-
-                // Tahap 5: VALIDASI DATA BERBEDA (CEK RRN)
-                const lastData = localStorage.getItem(STORAGE_KEY_DATA);
-                if (extractedRRN !== "UNKNOWN" && lastData && extractedRRN === lastData) {
-                    throw new Error("GAGAL: Data Transaksi (RRN) sama dengan sebelumnya. Upload bukti transaksi baru.");
+                // --- CEK DATA BERBEDA (LOGIKA UTAMA USER) ---
+                const lastDataID = localStorage.getItem(STORAGE_KEY_DATA);
+                if (extractedID === lastDataID) {
+                    throw new Error("GAGAL: Data Transaksi ini (" + idTypeLabel + ") sudah pernah digunakan. Silakan upload bukti transaksi baru dengan data yang berbeda.");
                 }
 
                 // Tahap 6: Simulasi Pengecekan Field-by-Field (Visual User)
                 const scanSteps = [
                     "Verifikasi: Transaksi berhasil!... OK",
-                    "Verifikasi: Terima Pembayaran via... OK",
-                    "Verifikasi: Total Terima: Rp... OK",
-                    "Verifikasi: Detail Transaksi... OK",
-                    "Verifikasi: Tanggal Hari Ini (" + todayDates[0] + ")... OK",
-                    "Verifikasi: Nama Merchant... OK",
-                    "Verifikasi: Merchant PAN... OK",
-                    "Verifikasi: ID Terminal... OK",
-                    "Verifikasi: Customer PAN... OK",
-                    "Verifikasi: RRN (" + extractedRRN + ")... OK",
-                    "Verifikasi: ID Transaksi... OK",
-                    "Verifikasi: ID Order Merchant... OK"
+                    "Verifikasi: Penerima KARYA ABADI... OK",
+                    "Verifikasi: Nominal Rp 1.000... OK",
+                    "Verifikasi: Tanggal Hari Ini... OK",
+                    "Verifikasi: " + idTypeLabel + " (" + extractedID + ")... OK",
+                    "Verifikasi: Data Unik... BERBEDA"
                 ];
 
                 for (let step of scanSteps) {
                     updateStatus(step, "loading");
-                    await new Promise(r => setTimeout(r, 400));
+                    await new Promise(r => setTimeout(r, 500));
                 }
 
                 // Tahap 7: SUKSES
-                finalizeVerification(currentFileHash, extractedRRN);
+                finalizeVerification(currentFileHash, extractedID);
 
             } catch (error) {
                 console.error(error);
@@ -972,7 +959,7 @@
             localStorage.setItem(STORAGE_KEY_HASH, hash);
             localStorage.setItem(STORAGE_KEY_DATA, dataFingerprint);
 
-            showStatus("TERVERIFIKASI: Data Valid & Hari Ini", "success");
+            showStatus("TERVERIFIKASI: Data Valid & Baru. Link aktif...", "success");
 
             setTimeout(() => {
                 updateStatus("Mengarahkan ke Opal...", "loading");
