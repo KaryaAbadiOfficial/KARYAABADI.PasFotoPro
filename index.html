@@ -31,16 +31,11 @@
             --border-color: #333;
             --shadow: 0 4px 15px rgba(0,0,0,0.5);
             --transition: all 0.3s ease;
-            
-            /* Warna Kuning Emas */
             --gold-yellow: #FFD700;
-            
-            /* Status Colors */
-            --status-green: #28a745; /* Hijau Sukses */
-            --status-yellow: #ffc107; /* Kuning Ditolak */
+            --status-green: #28a745;
+            --status-yellow: #ffc107;
         }
 
-        /* Light Mode Override */
         body.light-mode {
             --bg-color: #f0f0f0;
             --nav-bg: #000000; 
@@ -51,7 +46,6 @@
             --shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        /* --- LOGIKA WARNA KHUSUS --- */
         .step-icon, 
         .section-title span, 
         .usage-tag, 
@@ -101,7 +95,6 @@
             color: #000000 !important;
         }
 
-        /* --- HERO SECTION SPECIAL LOGIC --- */
         .hero {
             background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
         }
@@ -112,7 +105,6 @@
             color: #ffffff !important;
         }
 
-        /* --- GLOBAL STYLES --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -128,7 +120,6 @@
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
 
-        /* --- UTILITIES --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         .section-title { text-align: center; margin-bottom:3rem; }
         .section-title h2 { font-size: 2rem; color: var(--text-white); }
@@ -165,7 +156,6 @@
         body.light-mode .btn-outline { border-color: #000; color: #000; }
         .btn-outline:hover { background: var(--text-white); color: var(--bg-color); }
 
-        /* --- HEADER --- */
         header {
             background-color: #000000 !important; 
             padding: 15px 0;
@@ -194,7 +184,6 @@
         .theme-toggle-item:hover { background-color: rgba(255,255,255,0.1); color: #ffffff; }
         .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; color: #ffffff; }
 
-        /* --- HERO --- */
         .hero {
             height: 100vh; display: flex; align-items: center; justify-content: center;
             text-align: center; padding-top: 80px;
@@ -202,7 +191,6 @@
         .hero-content h1 { font-size: 3.5rem; margin-bottom: 10px; line-height: 1.2; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; }
         .hero-content em { font-style: normal; font-size: 1.2rem; color: var(--gold-yellow) !important; display: block; margin-bottom: 30px; font-family: 'Roboto', sans-serif; font-weight: 500; text-transform: none; }
 
-        /* --- FLOW SECTION (UPDATED) --- */
         .flow-steps {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -221,7 +209,6 @@
         .step-card h3 { margin-bottom: 10px; font-size: 1.1rem; line-height: 1.4; min-height: 2.8rem; display: flex; align-items: center; justify-content: center; }
         .step-card p { font-size: 0.9rem; color: var(--text-gray); line-height: 1.5; min-height: 3rem; display: flex; align-items: center; justify-content: center;}
 
-        /* --- SIZE GUIDE --- */
         .table-responsive { overflow-x: auto; background-color: var(--card-bg); border-radius: 10px; box-shadow: var(--shadow); }
         table { width: 100%; border-collapse: collapse; min-width: 800px; font-size: 0.9rem; }
         th, td { padding: 15px; text-align: center; border-bottom: 1px solid var(--border-color); }
@@ -229,11 +216,9 @@
         tr:last-child td { border-bottom: none; }
         .usage-tag { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 0.65rem; margin-right: 3px; margin-bottom: 3px; }
 
-        /* --- FOOTER --- */
         footer { background-color: #000; padding: 30px 0; text-align: center; border-top: 1px solid #222; }
         footer p { color: var(--text-gray); font-size: 0.9rem; }
 
-        /* --- MODAL --- */
         .modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
             overflow: auto; background-color: rgba(0,0,0,0.95); backdrop-filter: blur(5px);
@@ -270,7 +255,6 @@
         #proofInput { display: none; }
         .file-info { margin-top: 10px; font-size: 0.85rem; color: var(--primary-red); font-weight: 500; min-height: 20px; }
         
-        /* --- NEW STATUS BOX STYLES --- */
         .status-box {
             margin-top: 20px;
             padding: 15px;
@@ -311,9 +295,8 @@
 
         .disabled-btn { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
 
-        /* --- FORMULIR STYLES (WHITE FONT) --- */
         #orderFormStep {
-            display: none; /* Hidden initially */
+            display: none;
             animation: slideUp 0.5s ease-out;
         }
 
@@ -326,7 +309,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #ffffff !important; /* WARNA PUTIH */
+            color: #ffffff !important;
             background-color: transparent;
         }
 
@@ -335,13 +318,12 @@
             padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: 5px;
-            background-color: rgba(255,255,255,0.1) !important; /* Latar Gelap Transparan */
-            color: #ffffff !important; /* WARNA PUTIH */
+            background-color: rgba(255,255,255,0.1) !important;
+            color: #ffffff !important;
             font-family: 'Roboto', sans-serif;
             font-size: 1rem;
         }
 
-        /* Override Option Text juga putih */
         .form-control option {
             color: #000000 !important;
             background-color: #ffffff;
@@ -368,7 +350,6 @@
             transform: translateY(-2px);
         }
 
-        /* --- KUSTOMISASI KHUSUS --- */
         #contact .btn { background-color: #000000 !important; border: 2px solid #ffffff !important; color: white !important; box-shadow: none; }
         body.light-mode #contact h2 { color: #ffffff !important; }
         .qris-price-text { color: var(--gold-yellow); text-align: center; font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
@@ -376,73 +357,6 @@
 
         #verifyBtn { color: #ffffff !important; }
         #verifyBtn i { color: #ffffff !important; }
-
-        /* --- IKLAN STYLE (FIXED LEFT & RIGHT) --- */
-        .ads-wrapper {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 250px;
-            height: 250px;
-            z-index: 9999;
-            transition: all 0.7s ease;
-            display: none; /* Hidden by default until JS loads */
-        }
-
-        /* Khusus Desktop */
-        @media(min-width: 769px) {
-            .ads-wrapper { display: block; }
-        }
-
-        .ads-right {
-            right: -300px;
-        }
-
-        .ads-left {
-            left: -300px;
-        }
-
-        .ads-wrapper.show-right {
-            right: 10px;
-        }
-
-        .ads-wrapper.show-left {
-            left: 10px;
-        }
-
-        .ads-box {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            background: #fff;
-        }
-
-        .ads-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .close-ads-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(0,0,0,0.7);
-            color: #fff;
-            border: none;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 16px;
-            line-height: 25px;
-            z-index: 2;
-            transition: background 0.3s;
-        }
-        .close-ads-btn:hover { background: #000; }
 
         @media (max-width: 768px) {
             .hero-content h1 { font-size: 2rem; }
@@ -456,26 +370,6 @@
     </style>
 </head>
 <body>
-
-    <!-- IKLAN KANAN -->
-    <div id="ads-right" class="ads-wrapper ads-right">
-        <div class="ads-box">
-            <button class="close-ads-btn" onclick="closeAds('right')">×</button>
-            <a id="link-right" href="#" target="_blank">
-                <img id="img-right" src="" alt="Iklan Kanan">
-            </a>
-        </div>
-    </div>
-
-    <!-- IKLAN KIRI -->
-    <div id="ads-left" class="ads-wrapper ads-left">
-        <div class="ads-box">
-            <button class="close-ads-btn" onclick="closeAds('left')">×</button>
-            <a id="link-left" href="#" target="_blank">
-                <img id="img-left" src="" alt="Iklan Kiri">
-            </a>
-        </div>
-    </div>
 
     <!-- Header -->
     <header>
@@ -524,37 +418,37 @@
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-user"></i></div>
                     <h3>1. Siapkan Foto</h3>
-                    <p>Foto tegap lurus, pastikan tidak blur.</p>
+                    <p>Posisi tegap, jernih, & tidak blur.</p>
                 </div>
                 <!-- Step 2 -->
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-mouse-pointer"></i></div>
-                    <h3>2. Klik Buat Foto Sekarang</h3>
-                    <p>Untuk memulai prosesnya.</p>
+                    <h3>2. Klik Tombol Mulai</h3>
+                    <p>Tekan "Buat Foto Sekarang".</p>
                 </div>
                 <!-- Step 3 -->
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-qrcode"></i></div>
-                    <h3>3. Scan QRIS via BANK dan via DANA</h3>
-                    <p>Donasi Rp.1000,- sebagai bentuk dukungan kepada kami.</p>
+                    <h3>3. Scan QRIS</h3>
+                    <p>Donasi Rp1.000 via Bank atau DANA.</p>
                 </div>
                 <!-- Step 4 -->
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-mobile-screen-button"></i></div>
-                    <h3>4. Screenshot Transaksi QRIS</h3>
-                    <p>Sebagai bukti telah memberikan donasi.</p>
+                    <h3>4. Screenshot Bukti</h3>
+                    <p>Ambil tangkapan layar bukti bayar.</p>
                 </div>
                 <!-- Step 5 -->
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-save"></i></div>
-                    <h3>5. Simpan Screenshot Transaksi QRIS</h3>
-                    <p>Untuk verifikasi mengakses layanan kami.</p>
+                    <h3>5. Simpan Screenshot</h3>
+                    <p>Simpan gambar ke perangkat Anda.</p>
                 </div>
                 <!-- Step 6 -->
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                    <h3>6. Upload Screenshot Transaksi QRIS</h3>
-                    <p>Sistem akan otomatis memverifikasi mengaktikan layanan kami.</p>
+                    <h3>6. Upload & Verifikasi</h3>
+                    <p>Upload bukti untuk akses otomatis.</p>
                 </div>
             </div>
         </div>
@@ -636,7 +530,6 @@
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
             
-            <!-- STEP 1 & 2: VERIFICATION (INITIAL) -->
             <div id="verificationStep">
                 <div style="color: var(--primary-red); font-size: 3rem; margin-bottom: 15px;">
                     <i class="fas fa-hand-holding-heart"></i>
@@ -644,19 +537,14 @@
                 <h3>Akses Layanan Kami</h3>
                 
                 <div class="step-container">
-                    <!-- Step 1: QRIS -->
                     <div class="flow-step">
                         <div class="step-text-center">
                             <p><strong>Langkah 1:</strong> Scan QRIS via BANK dan via DANA.</p>
-                            
-                            <!-- QRIS IMAGE -->
                             <img src="https://z-cdn-media.chatglm.cn/files/5a05ede0-b812-4ad2-bbad-fa022fc5b42a.png?auth_key=1878102707-48fc6dd3fed44155b02bdfcb99ecf4f0-0-37c4428294b7205f4405e727b35eba07" alt="QRIS Pas Foto Pro" class="qris-img">
-                            
                             <p class="qris-price-text">Dukung Kami : Rp.1.000.-</p>
                         </div>
                     </div>
 
-                    <!-- Step 2: Upload & Verify -->
                     <div class="flow-step">
                         <div class="step-text-center">
                             <p><strong>Langkah 2:</strong> Upload Bukti Screenshot.</p>
@@ -680,7 +568,6 @@
                 </div>
             </div>
 
-            <!-- STEP 3: ORDER FORM (AFTER VERIFICATION) -->
             <div id="orderFormStep">
                 <div style="color: var(--status-green); font-size: 3rem; margin-bottom: 15px;">
                     <i class="fas fa-check-circle"></i>
@@ -690,7 +577,6 @@
 
                 <form id="orderForm" onsubmit="event.preventDefault(); submitToWhatsApp();">
                     
-                    <!-- 1. Upload Foto -->
                     <div class="form-group">
                         <label class="form-label">1. Upload Foto</label>
                         <div class="file-upload-wrapper">
@@ -702,7 +588,6 @@
                         </div>
                     </div>
 
-                    <!-- 2. Pilihan Model -->
                     <div class="form-group">
                         <label class="form-label">2. Pilihan Model</label>
                         <select id="modelOption" class="form-control">
@@ -716,7 +601,6 @@
                         </select>
                     </div>
 
-                    <!-- 3. Pilihan Background -->
                     <div class="form-group">
                         <label class="form-label">3. Pilihan Background</label>
                         <select id="bgOption" class="form-control">
@@ -726,7 +610,6 @@
                         </select>
                     </div>
 
-                    <!-- Submit Button -->
                     <button type="submit" class="btn btn-whatsapp">
                         <i class="fab fa-whatsapp"></i> Kirim Foto ke WhatsApp
                     </button>
@@ -735,87 +618,9 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic (DIRECT WA SHARE) -->
     <script>
         // ==========================================
-        // 1. LOGIKA IKLAN (FIXED LEFT & RIGHT)
-        // ==========================================
-        
-        const adsData = [
-            {
-                image: "https://down-cvs-id.img.susercontent.com/id-11134207-7rbk8-m7ufq95rm6vkfa.webp",
-                link: "https://s.shopee.co.id/7ppskITGss"
-            },
-            {
-                image: "https://down-cvs-id.img.susercontent.com/id-11134207-7rbk2-m7ug19tqzhsp1a.webp",
-                link: "https://s.shopee.co.id/W3I0tMzot"
-            },
-            {
-                image: "https://down-cvs-id.img.susercontent.com/id-11134207-7rbk7-m8jvqu2mu80hcb.webp",
-                link: "https://s.shopee.co.id/7AaBxD9CSd"
-            },
-            {
-                image: "https://down-cvs-id.img.susercontent.com/id-11134207-7r98p-lllosyrxyvbb6a.webp",
-                link: "https://s.shopee.co.id/10zYcBKo7u"
-            },
-            {
-                image: "https://down-cvs-id.img.susercontent.com/id-11134207-7r991-lnk47jfm0vi4ae.webp",
-                link: "https://s.shopee.co.id/4AwaOkxwnp"
-            },
-            {
-                image: "https://down-cvs-id.img.susercontent.com/id-11134207-7r98q-lmw0euvq911o4a.webp",
-                link: "https://s.shopee.co.id/6fdvNS3Ony"
-            },
-            {
-                image: "https://down-cvs-id.img.susercontent.com/sg-11134201-22110-u2gx3o0d6jjve6.webp",
-                link: "https://s.shopee.co.id/3B43D6SFLG"
-            },
-            {
-                image: "https://down-cvs-id.img.susercontent.com/id-11134207-7rasj-m3kclrd26cic85.webp",
-                link: "https://s.shopee.co.id/3g0Jo5gfaa"
-            }
-        ];
-
-        let currentAdsIndex = 0;
-        let adInterval;
-
-        const adsRight = document.getElementById("ads-right");
-        const adsLeft = document.getElementById("ads-left");
-        const imgRight = document.getElementById("img-right");
-        const linkRight = document.getElementById("link-right");
-        const imgLeft = document.getElementById("img-left");
-        const linkLeft = document.getElementById("link-left");
-
-        function showAds(index) {
-            imgRight.src = adsData[index].image;
-            linkRight.href = adsData[index].link;
-            imgLeft.src = adsData[index].image;
-            linkLeft.href = adsData[index].link;
-            adsRight.classList.add("show-right");
-            adsLeft.classList.add("show-left");
-        }
-
-        function rotateAds() {
-            adsRight.classList.remove("show-right");
-            adsLeft.classList.remove("show-left");
-            setTimeout(() => {
-                currentAdsIndex++;
-                if (currentAdsIndex >= adsData.length) currentAdsIndex = 0;
-                showAds(currentAdsIndex);
-            }, 700); 
-        }
-
-        function closeAds(side) {
-            if (side === 'right') adsRight.style.display = 'none';
-            else if (side === 'left') adsLeft.style.display = 'none';
-        }
-
-        showAds(currentAdsIndex);
-        adInterval = setInterval(rotateAds, 5000);
-
-
-        // ==========================================
-        // 2. LOGIKA WEBSITE UTAMA (FINAL WA DIRECT)
+        // LOGIKA WEBSITE UTAMA
         // ==========================================
         
         const STORAGE_KEY_HASH = "karyaAbadi_lastVerifiedHash";
@@ -824,7 +629,6 @@
         let currentFile = null;
         let currentFileHash = null;
 
-        // --- HELPER: GENERATE PATTERN TANGGAL HARI INI ---
         function getTodayDatePatterns() {
             const now = new Date();
             const day = String(now.getDate()).padStart(2, '0');
@@ -843,7 +647,6 @@
             ];
         }
 
-        // --- FILE HASHING FUNCTION ---
         async function calculateFileHash(file) {
             const arrayBuffer = await file.arrayBuffer();
             const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
@@ -851,7 +654,6 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // Modal Functions
         const modal = document.getElementById("paymentModal");
 
         function openModal() {
@@ -869,7 +671,6 @@
         }
 
         function resetUI() {
-            // Reset Verification Step
             document.getElementById('proofInput').value = '';
             document.getElementById('fileInfo').innerText = '';
             document.getElementById('statusBox').style.display = 'none';
@@ -879,11 +680,9 @@
             document.getElementById('verifyBtn').innerHTML = '<i class="fas fa-check-circle"></i> Verifikasi & Mulai';
             document.getElementById('verifyBtn').style.backgroundColor = "";
             
-            // Reset Form Step Visibility
             document.getElementById('verificationStep').style.display = 'block';
             document.getElementById('orderFormStep').style.display = 'none';
 
-            // Reset Form Values
             document.getElementById('orderForm').reset();
             document.getElementById('userPhotoLabel').innerHTML = '<i class="fas fa-camera" style="font-size: 1.5rem;"></i> <span>Pilih Foto Pas Foto...</span>';
 
@@ -920,14 +719,13 @@
                 info.innerText = "File terpilih: " + currentFile.name;
                 label.innerHTML = '<i class="fas fa-file-image"></i> ' + currentFile.name;
                 
-                // CEK SAMA SAAT PILIH FILE (PERCEPAT)
                 const lastHash = localStorage.getItem(STORAGE_KEY_HASH);
                 const lastData = localStorage.getItem(STORAGE_KEY_DATA);
 
                 if (currentFileHash === lastHash) {
                     info.innerText = "GAGAL: File ini pernah diverifikasi sebelumnya.";
                     info.style.color = "#ff9800"; 
-                    btn.classList.add('disabled-btn'); // Disable button immediately
+                    btn.classList.add('disabled-btn');
                     return;
                 } else {
                     info.style.color = "var(--primary-red)";
@@ -938,7 +736,6 @@
             }
         }
 
-        // --- OCR & VERIFICATION PROCESS (FINAL TIME & ID) ---
         async function startVerificationProcess() {
             if (!currentFile) return;
 
@@ -947,13 +744,11 @@
             const lastVerifiedHash = localStorage.getItem(STORAGE_KEY_HASH);
             const todayDates = getTodayDatePatterns();
 
-            // 1. CEK CEPAT: FILE SAMA PERSIS? (Persist across refresh)
             if (currentFileHash === lastVerifiedHash) {
                 showStatus("AKSES DITOLAK: File ini pernah diverifikasi sebelumnya (Data Sama).", "reject");
                 return;
             }
 
-            // 2. Mulai Proses Verifikasi OCR
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
             statusBox.style.display = 'flex';
@@ -965,7 +760,6 @@
 
                 updateStatus("Membaca Teks pada Bukti Screenshot...", "loading");
                 
-                // Menggunakan Tesseract dengan bahasa Inggris dan Indonesia
                 const { data: { text, confidence } } = await Tesseract.recognize(
                     currentFile,
                     'eng+ind',
@@ -987,83 +781,63 @@
 
                 const lowerText = text.toLowerCase();
 
-                // ==========================================
-                // LOGIKA DETEKSI JENIS STRUK (DANA vs BANK)
-                // ==========================================
                 let extractedUniqueKey = null;
                 let isDanaReceipt = lowerText.includes("dana") && (lowerText.includes("detail transaksi") || lowerText.includes("saldo dana"));
 
-                // --- LOGIKA KHUSUS DANA (FINAL: TIME + 4 DIGIT ID) ---
                 if (isDanaReceipt) {
                     updateStatus("Terdeteksi Screenshot DANA...", "loading");
                     
-                    // 1. Cek "Transaksi berhasil!"
                     if (!text.includes("Transaksi berhasil") && !text.includes("Berhasil")) {
                         throw new Error("GAGAL (DANA): Status bukan 'Transaksi berhasil!'.");
                     }
 
-                    // 2. Cek "Pembayaran ke KARYA ABADI"
                     if (!lowerText.includes("pembayaran ke") || !lowerText.includes("karya abadi")) {
                         throw new Error("GAGAL (DANA): Penerima bukan KARYA ABADI.");
                     }
 
-                    // 3. Ekstrak Waktu Transaksi (HH:MM)
                     const timeMatch = text.match(/([01]?[0-9]|2[0-3]):[0-5][0-9]/);
                     if (!timeMatch) {
                         throw new Error("GAGAL (DANA): Waktu transaksi tidak terbaca.");
                     }
                     const transactionTime = timeMatch[0];
 
-                    // 4. Ekstrak ID DANA & Ambil 4 Angka Terakhir
-                    // Regex mencari ID setelah "ID DANA"
                     const idMatch = text.match(/ID DANA\s*[:\.]?\s*([0-9\w]+)/i);
                     if (!idMatch) {
                         throw new Error("GAGAL (DANA): ID DANA tidak ditemukan.");
                     }
                     const fullId = idMatch[1];
-                    const last4Id = fullId.slice(-4); // Ambil 4 terakhir
+                    const last4Id = fullId.slice(-4);
 
-                    // 5. Buat Kunci Unik: WAKTU + 4 DIGIT TERAKHIR ID
-                    // Contoh: "12:28-2054"
                     extractedUniqueKey = `${transactionTime}-${last4Id}`;
 
-                    // 6. Cek Duplikasi (Persist across refresh via LocalStorage)
                     const storedKey = localStorage.getItem(STORAGE_KEY_DATA);
                     if (storedKey && storedKey === extractedUniqueKey) {
                         throw new Error(`GAGAL (DANA): Waktu & 4 Angka Terakhir ID DANA SAMA. Akses Ditolak.`);
                     }
 
-                } 
-                // --- FALLBACK: LOGIKA QRIS BANK ---
-                else {
+                } else {
                     updateStatus("Terdeteksi Struk QRIS Bank...", "loading");
-                    // Cari RRN
                     let rrnMatch = text.match(/RRN\s*[:]\s*([0-9]+)/i);
                     if (!rrnMatch) {
                          throw new Error("GAGAL: Tidak dikenali sebagai DANA atau Struk Bank QRIS.");
                     }
-                    // Untuk Bank, kita gunakan RRN penuh sebagai kunci
                     extractedUniqueKey = `RRN_${rrnMatch[1]}`;
                     
-                    // Cek Nama Penerima (Umum)
                     if (!lowerText.includes("karya") && !lowerText.includes("abadi")) {
                         throw new Error("GAGAL: Nama penerima tidak sesuai.");
                     }
                     
-                    // Cek duplikasi RRN
                     const storedKey = localStorage.getItem(STORAGE_KEY_DATA);
                     if (storedKey && storedKey === extractedUniqueKey) {
                          throw new Error("GAGAL: RRN ini sudah pernah digunakan.");
                     }
                 }
 
-                // --- CEK NOMINAL (Rp1.000) ---
                 const amountPattern = /(?:rp\.?\s?)1\.000|(?:1\.000)/i;
                 if (!amountPattern.test(text)) {
                     throw new Error("GAGAL: Nominal transaksi tidak sesuai (Harus Rp 1.000).");
                 }
 
-                // --- VALIDASI TANGGAL HARI INI ---
                 const dateRegex = /(\d{2})[-\/](\d{2})[-\/](\d{4})/g;
                 const foundDates = text.match(dateRegex);
                 let isDateValid = false;
@@ -1077,7 +851,6 @@
                     });
                 }
 
-                // Fallback tanggal teks untuk DANA
                 if (!isDateValid && isDanaReceipt) {
                      if (todayDates.some(date => text.includes(date.split(" ")[0] + " " + date.split(" ")[1]))) {
                          isDateValid = true;
@@ -1088,7 +861,6 @@
                     throw new Error(`GAGAL: Tanggal transaksi harus hari ini (${todayDates[0]}). Sistem mendeteksi tanggal lain.`);
                 }
 
-                // Tahap 6: Simulasi Pengecekan Field-by-Field (Visual User)
                 const scanSteps = [
                     `Verifikasi: Tipe Bukti (${isDanaReceipt ? 'DANA' : 'QRIS'})... OK`,
                     "Verifikasi: Transaksi berhasil... OK",
@@ -1104,7 +876,6 @@
                     await new Promise(r => setTimeout(r, 500));
                 }
 
-                // Tahap 7: SUKSES -> TAMPILKAN FORM
                 finalizeVerification(currentFileHash, extractedUniqueKey);
 
             } catch (error) {
@@ -1121,10 +892,8 @@
             statusBox.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> ' + message;
         }
 
-        // --- FINALIZE VERIFICATION (SHOW FORM) ---
         function finalizeVerification(hash, dataFingerprint) {
             const statusBox = document.getElementById('statusBox');
-            const btn = document.getElementById('verifyBtn');
 
             localStorage.setItem(STORAGE_KEY_HASH, hash);
             localStorage.setItem(STORAGE_KEY_DATA, dataFingerprint);
@@ -1132,15 +901,11 @@
             showStatus("TERVERIFIKASI: Data Valid & Baru. Mengalihkan ke formulir...", "success");
 
             setTimeout(() => {
-                // Sembunyikan Verifikasi Step
                 document.getElementById('verificationStep').style.display = 'none';
-                
-                // Tampilkan Order Form Step
                 document.getElementById('orderFormStep').style.display = 'block';
             }, 1000);
         }
 
-        // --- DIRECT WHATSAPP SHARE (SEND FILE + TEXT) ---
         function submitToWhatsApp() {
             const model = document.getElementById('modelOption').value;
             const bg = document.getElementById('bgOption').value;
@@ -1155,17 +920,14 @@
                 return;
             }
 
-            // Nomor WA tujuan
             const phone = "6285117124247";
 
-            // Format Pesan Caption (Isi Formulir)
             let messageText = `*Pesanan Pas Foto Karya Abadi*%0A%0A`;
             messageText += `1. Upload Foto: Terlampir%0A`;
             messageText += `2. Pilihan Model: ${model}%0A`;
             messageText += `3. Pilihan Background: ${bg}%0A%0A`;
             messageText += `Mohon diproses, terima kasih.`;
 
-            // Gunakan Web Share API untuk mengirim file langsung (Langsung ke WA jika user pilih WA)
             if (navigator.canShare && navigator.share) {
                 const shareData = {
                     files: [file],
@@ -1173,21 +935,17 @@
                     title: 'Pesanan Pas Foto'
                 };
 
-                // Cek apakah device support file sharing
                 if (navigator.canShare(shareData)) {
                     navigator.share(shareData)
                         .then(() => console.log('Berhasil dikirim via Share Menu.'))
                         .catch((error) => {
                             console.log('Dibatalkan user atau error browser:', error);
-                            // Jika user membatalkan atau error, buka link WA biasa (tanpa file)
                             fallbackWA(messageText);
                         });
                 } else {
-                    // Jika device tidak support file share (jarang terjadi di modern OS)
                     fallbackWA(messageText);
                 }
             } else {
-                // Fallback untuk browser lawas
                 fallbackWA(messageText);
             }
         }
@@ -1213,7 +971,6 @@
             }
         }
 
-        // Mobile Menu & Theme
         function toggleMenu() {
             const nav = document.getElementById("navLinks");
             nav.classList.toggle("active");
@@ -1230,7 +987,6 @@
             }
         }
 
-        // Smooth Scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 if(this.getAttribute('href') === '#' || this.classList.contains('disabled-link')) return;
